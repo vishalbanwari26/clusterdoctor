@@ -31,3 +31,36 @@ def test_live_rerun_disabled_by_default(monkeypatch):
     monkeypatch.delenv("CD_ALLOW_LIVE", raising=False)
     rid = client.get("/api/incidents").json()[0]["id"]
     assert client.post(f"/api/incidents/{rid}/rerun").status_code == 403
+
+
+def _stub_live(monkeypatch, fail=False):
+    from clusterdoctor import agent, replay
+    from clusterdoctor.agent import Investigation
+    monkeypatch.setenv("CD_ALLOW_LIVE", "1"); monkeypatch.setenv("NEBIUS_API_KEY", "test-key-not-real")
+    monkeypatch.setattr(agent, "nemotron_chat", lambda *a, **k: None)
+    def run(*a, **k):
+        if fail:
+            raise RuntimeError("secret-looking provider detail test-key-not-real")
+        return Investigation(diagnosis={"root_cause": "retry_storm", "confidence": "high", "evidence": [],
+                                        "rejected_hypotheses": [], "uncertainties": [], "recommended_actions": []})
+    monkeypatch.setattr(replay, "run_app_investigation", run)
+    monkeypatch.setattr(replay, "run_gpu_investigation", run)
+    from clusterdoctor.limits import LiveGuard
+    monkeypatch.setattr(api, "guard", LiveGuard(daily_cap=3, per_ip=1, max_concurrent=2))
+
+
+def test_live_rerun_enforces_per_ip_limit(monkeypatch):
+    _stub_live(monkeypatch)
+    rid = client.get("/api/incidents").json()[0]["id"]
+    ok = client.post(f"/api/incidents/{rid}/rerun", headers={"x-forwarded-for": "5.5.5.5"})
+    assert ok.status_code == 200 and ok.json()["diagnosis"]["root_cause"] == "retry_storm"
+    again = client.post(f"/api/incidents/{rid}/rerun", headers={"x-forwarded-for": "5.5.5.5"})
+    assert again.status_code == 429 and "per visitor" in again.json()["detail"]
+    assert client.post(f"/api/incidents/{rid}/rerun", headers={"x-forwarded-for": "6.6.6.6"}).status_code == 200
+
+
+def test_live_failure_does_not_leak_details(monkeypatch):
+    _stub_live(monkeypatch, fail=True)
+    rid = client.get("/api/incidents").json()[0]["id"]
+    r = client.post(f"/api/incidents/{rid}/rerun", headers={"x-forwarded-for": "7.7.7.7"})
+    assert r.status_code == 502 and "test-key-not-real" not in r.text and "RuntimeError" in r.text

@@ -1,25 +1,29 @@
 """Dashboard API. Replays stored investigations by default; live reruns are opt-in and capped.
 
-Env: CD_DATA (replay dir), CD_ALLOW_LIVE=1 to enable POST .../rerun, CD_LIVE_CAP (max live runs per process).
+Env: CD_DATA (replay dir), CD_ALLOW_LIVE=1 to enable POST .../rerun, CD_LIVE_DAILY_CAP / CD_LIVE_PER_IP /
+CD_LIVE_MAX_CONCURRENT (limits, see limits.py).
 """
 from __future__ import annotations
 
 import json
 import os
-import threading
 from pathlib import Path
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 load_dotenv(".env")
 
+from .limits import LiveGuard, LiveLimit, client_ip  # noqa: E402
+
 DATA = Path(os.environ.get("CD_DATA", "data/replays"))
 WEB = Path(os.environ.get("CD_WEB", "web/dist"))
 app = FastAPI(title="ClusterDoctor")
-_live = {"used": 0, "lock": threading.Lock()}
+guard = LiveGuard(daily_cap=int(os.environ.get("CD_LIVE_DAILY_CAP", "20")),
+                  per_ip=int(os.environ.get("CD_LIVE_PER_IP", "2")),
+                  max_concurrent=int(os.environ.get("CD_LIVE_MAX_CONCURRENT", "2")))
 
 
 ORDER = ["prompt-bloat", "retry-storm", "overlap", "misleading-event", "provider-slowdown",
@@ -37,14 +41,14 @@ def _load(rid: str) -> dict:
     return json.loads((DATA / f"{rid}.json").read_text())
 
 
-def _live_cap() -> int:
-    return int(os.environ.get("CD_LIVE_CAP", "5"))
+def _live_enabled() -> bool:
+    return os.environ.get("CD_ALLOW_LIVE") == "1" and bool(os.environ.get("NEBIUS_API_KEY"))
 
 
 @app.get("/api/health")
-def health():
-    return {"mode": "replay", "live_enabled": os.environ.get("CD_ALLOW_LIVE") == "1" and bool(os.environ.get("NEBIUS_API_KEY")),
-            "live_used": _live["used"], "live_cap": _live_cap(), "incidents": len(_ids())}
+def health(request: Request):
+    ip = client_ip(request.headers, request.client.host if request.client else None)
+    return {"mode": "replay", "live_enabled": _live_enabled(), "incidents": len(_ids()), **guard.status(ip)}
 
 
 @app.get("/api/incidents")
@@ -74,24 +78,35 @@ def truth(rid: str):
 
 
 @app.post("/api/incidents/{rid}/rerun")
-def rerun(rid: str):
-    if os.environ.get("CD_ALLOW_LIVE") != "1" or not os.environ.get("NEBIUS_API_KEY"):
+def rerun(rid: str, request: Request):
+    if not _live_enabled():
         raise HTTPException(403, "live reruns are disabled (set CD_ALLOW_LIVE=1 and NEBIUS_API_KEY)")
     d = _load(rid)
-    with _live["lock"]:
-        if _live["used"] >= _live_cap():
-            raise HTTPException(429, f"live run cap reached ({_live_cap()} per server start)")
-        _live["used"] += 1
+    try:
+        guard.acquire(client_ip(request.headers, request.client.host if request.client else None))
+    except LiveLimit as e:
+        raise HTTPException(429, e.message)
+    try:
+        return _run_live(rid, d)
+    except HTTPException:
+        raise
+    except Exception as e:          # never echo provider errors (they can contain request details)
+        raise HTTPException(502, f"live run failed ({type(e).__name__}). The run was still counted.")
+    finally:
+        guard.release()
+
+
+def _run_live(rid: str, d: dict) -> dict:
     from .agent import nemotron_chat
     from .replay import investigation_to_dict, run_app_investigation, run_gpu_investigation
-    from .store import Request, Store
+    from .store import Request as Row, Store
     chat, verifier = nemotron_chat(), nemotron_chat(os.environ.get("CD_VERIFIER_MODEL"))
     tel = d["telemetry"]
     if d["domain"] == "inference":
         raw = json.loads((DATA / f"{rid}.telemetry.json").read_text())
         store = Store(":memory:")
         for row in raw["requests"]:
-            store.add_request(Request(**dict(zip(raw["columns"], row))))
+            store.add_request(Row(**dict(zip(raw["columns"], row))))
         for ts, kind, detail in raw["events"]:
             store.add_event(ts, kind, detail)
         inv = run_app_investigation(chat, verifier, store, tuple(tel["baseline"]), tuple(tel["incident"]), d["summary"])

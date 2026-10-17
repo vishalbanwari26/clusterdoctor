@@ -121,11 +121,22 @@ Eight stored incidents (5 inference with live Token Factory traffic, 3 simulated
 ```bash
 cd web && npm install && npm run build && cd ..          # build the UI once
 PYTHONPATH=src uv run uvicorn clusterdoctor.api:app --port 8011
-# optional, spends credits (about $0.04 per run), capped per server start:
-CD_ALLOW_LIVE=1 CD_LIVE_CAP=5 PYTHONPATH=src uv run uvicorn clusterdoctor.api:app --port 8011
+# optional: enable live runs (about $0.04 each). Needs NEBIUS_API_KEY in .env
+CD_ALLOW_LIVE=1 PYTHONPATH=src uv run uvicorn clusterdoctor.api:app --port 8011
 ```
 
 To rebuild the replays: generate cases with `bench_generate.py`, then `scripts/build_replays.py` (`--dry` skips the model calls).
+
+## Live URL on a Hugging Face Space
+
+The same app runs as a Docker Space: replays are free and unlimited, and "Run live" calls Token Factory.
+
+1. Create a Space at huggingface.co/new-space (SDK: Docker, blank template).
+2. In the Space settings add a **secret** named `NEBIUS_API_KEY`. Never put the key in git or the image.
+3. Deploy: `scripts/deploy_space.sh <hf-username>/<space-name>` (git asks for a Hugging Face write token as the password).
+4. **In the Nebius console, set a spending limit on that API key.** This is the real hard cap.
+
+Live runs are limited per visitor (default 2/day, by IP) and per day for the whole server (default 20), with at most 2 running at once; each run costs about $0.02 to $0.06 and takes about a minute. Change the limits with `CD_LIVE_PER_IP`, `CD_LIVE_DAILY_CAP` and `CD_LIVE_MAX_CONCURRENT`. The counters live in memory, so a restart resets them; that is why the key's own spending limit matters. Without the secret the Space still serves replays and the live button stays off. Free Spaces may sleep when idle, so the first visit can be slow.
 
 ## Demo plan (3 minutes)
 
@@ -136,7 +147,7 @@ To rebuild the replays: generate cases with `bench_generate.py`, then `scripts/b
 5. A simulated GPU node shows the same symptom (low utilization) with a different cause and a different diagnosis.
 6. The results slide, including the single-call baseline that ties the agent, and why that matters.
 
-Still to do: hosting and the video.
+Still to do: deploy the Space and record the video.
 
 ## Feedback for Nebius
 

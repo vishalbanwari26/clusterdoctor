@@ -86,14 +86,14 @@ export default function App() {
   };
   const cite = (id) => { setActive(id); setShown(total); setTimeout(() => setActive(null), 2500); };
   const rerun = async () => {
-    if (!window.confirm("Run this investigation live on Nebius Token Factory? It spends API credits (about $0.04).")) return;
+    if (!window.confirm("Run this investigation live on Nebius Token Factory with Nemotron? It takes about a minute and uses a small amount of the demo's credits (limited per visitor per day).")) return;
     setLive({ state: "running" });
     try { const r = await getJson(`/api/incidents/${sel}/rerun`, { method: "POST" }); setLive({ state: "done", inv: r }); setShown(r.trace.length); }
     catch (e) { setLive({ state: "error", error: e.message }); }
     loadHealth();
   };
   const reveal = () => getJson(`/api/incidents/${sel}/truth`).then(setTruth);
-  const liveOn = health?.live_enabled && health.live_used < health.live_cap;
+  const liveOn = health?.live_enabled && health.daily_used < health.daily_cap && health.ip_used < health.ip_cap;
   const replaying = shown < total && !live;
 
   return (
@@ -102,7 +102,9 @@ export default function App() {
         <div><h1>ClusterDoctor</h1><span className="tag">From monitoring symptoms to diagnosing root causes</span></div>
         <div className="pills">
           <span className="pill">Replay mode · stored investigations, no API spend</span>
-          <span className="pill dim">Live runs: {health ? (health.live_enabled ? `${health.live_used}/${health.live_cap} used` : "off") : "n/a"}</span>
+          <span className="pill dim">Live runs: {health ? (health.live_enabled
+            ? `${health.daily_cap - health.daily_used} left today, ${Math.max(0, health.ip_cap - health.ip_used)} for you`
+            : "off") : "n/a"}</span>
         </div>
       </header>
 
@@ -140,7 +142,7 @@ export default function App() {
                 <div className="actions">
                   <button onClick={replay} disabled={!inv || live?.state === "running"}>▶ Replay</button>
                   <button onClick={rerun} disabled={!liveOn || live?.state === "running"}
-                          title={liveOn ? "Spends API credits" : "Live runs are disabled on this server"}>
+                          title={liveOn ? "Re-runs this investigation on Nebius Token Factory" : health?.live_enabled ? "Live run limit reached for today" : "Live runs are disabled on this server"}>
                     {live?.state === "running" ? "Running live…" : "Run live"}
                   </button>
                   <button onClick={reveal} disabled={!!truth}>Reveal injected fault</button>

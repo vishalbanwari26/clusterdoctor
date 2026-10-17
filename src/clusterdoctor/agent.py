@@ -95,7 +95,7 @@ def nemotron_chat(model: str | None = None) -> Chat:
     from openai import OpenAI
     client = OpenAI(api_key=os.environ["NEBIUS_API_KEY"],
                     base_url=os.environ.get("NEBIUS_BASE_URL", "https://api.tokenfactory.nebius.com/v1/"))
-    model = model or os.environ["CD_AGENT_MODEL"]
+    model = model or os.environ.get("CD_AGENT_MODEL", "nvidia/Nemotron-3-Ultra-550b-a55b")
 
     def chat(messages, tools):
         kwargs = {"tools": tools} if tools else {}
