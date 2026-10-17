@@ -1,0 +1,125 @@
+# ClusterDoctor: Devpost submission text
+
+Fill the bracketed items before submitting: `[SPACE URL]`, `[VIDEO URL]`. Everything else is ready to paste.
+
+- **Track:** Best Apps and Agents
+- **Repo:** https://github.com/vishalbanwari26/clusterdoctor (MIT license)
+- **Demo:** [SPACE URL]
+- **Video:** [VIDEO URL]
+
+---
+
+## Tagline
+
+From monitoring symptoms to diagnosing root causes.
+
+## Short description
+
+ClusterDoctor watches telemetry from an AI inference app and a GPU fleet, opens an incident when something degrades, and investigates the cause with NVIDIA Nemotron on Nebius Token Factory. Each report lists the evidence, the hypotheses it ruled out and what is still uncertain.
+
+## Inspiration
+
+During my master's thesis at DFKI I trained models on a shared GPU cluster and watched it in Grafana. Sometimes a GPU misbehaved. The dashboard showed that utilization was low. It did not show why. Finding out meant reading metrics, logs, job configs and scheduler output by hand.
+
+Monitoring tells you what is happening. The first hour of an incident is spent working out why. I wanted to see how much of that first pass a model could do, and how often it would be confidently wrong.
+
+## What it does
+
+ClusterDoctor has three parts.
+
+1. **Watchers.** Plain statistics, no model. A latency watcher opens an incident when p95 stays above 1.5 times its baseline for two windows. A GPU watcher opens one when a GPU's utilization stays 40% below its own baseline for two windows. GPUs that were never busy are ignored.
+2. **An investigation agent.** Nemotron 3 Ultra gets read-only tools and works the incident. It compares windows, reads deploy events and splits latency by input size, retries and concurrency. For GPUs it reads temperature, clocks, throttle reasons, Xid errors, host CPU and peer GPUs. It has to test its top two hypotheses with a stratified comparison before it can answer.
+3. **Checks on the answer.** Every citation must point to a tool call that happened. A second pass checks each factual or numeric claim against the tool results, and the agent has to revise any that conflict. If no evidence survives, the answer becomes `insufficient_evidence`.
+
+The dashboard shows what the watcher saw, the investigation step by step, and the report. A "Reveal injected fault" button shows the ground truth next to the diagnosis, including where the agent got it wrong. ClusterDoctor never changes infrastructure. It recommends actions and a person approves them.
+
+## How we built it
+
+- **Inference app under test:** real calls to `nvidia/Nemotron-3_5-Lightning` on Token Factory. All latency, time to first token, token counts and retry data in the benchmarks come from those calls.
+- **Investigation, claim checking and the baseline:** `nvidia/Nemotron-3-Ultra-550b-a55b` on Token Factory, through the OpenAI-compatible API with tool calling.
+- **Backend:** Python and FastAPI, SQLite for telemetry.
+- **Frontend:** React and Vite, dark mode, hand-drawn SVG charts.
+- **Hosting:** a Docker Space. Stored investigations replay with no API use, and "Run live" calls Token Factory with per-visitor and daily limits.
+
+### What is real and what is simulated
+
+I do not have a GPU, so I was careful about this.
+
+- Token Factory telemetry: real.
+- The retry-storm 429s and the provider-slowdown delay: injected on the client, and labeled `live_injected`. Retry and backoff behavior on top of them is real.
+- All GPU telemetry: **simulated**. The metric names follow NVIDIA DCGM exporter, but the series are generated, each fault has a signature I wrote, and the dashboard marks every GPU view as simulated. Results on it show that the pipeline works. They do not show accuracy on a real cluster.
+
+## Nemotron and Token Factory use
+
+- Every investigation is a set of live Token Factory calls to Nemotron 3 Ultra: tool selection, hypothesis tests, the diagnosis, and the claim check.
+- The workload being diagnosed runs on Nemotron 3.5 Lightning through the same API, which keeps the demo cheap and gives the investigator real telemetry from the platform it runs on.
+- Using two models for two jobs kept cost down. An investigation costs about $0.02 to $0.06 and takes 20 to 70 seconds.
+- Token Factory's streaming usage field gave exact input and output token counts for every request, which the analysis depends on.
+
+## Results
+
+All numbers come from `bench/results_*.json` in the repo. The cases are small, three repeats per fault, so a difference of one or two cases is noise.
+
+Detection: all 21 injected latency incidents were detected, with no false alerts on 3 healthy runs.
+
+**Hard Token Factory cases** (24 evaluations where a one-shot dashboard summary can mislead: two overlapping changes, a misleading deploy event, bloat in a subset of requests, a provider-side slowdown):
+
+| | Correct | Wrong with high confidence | Cost per case |
+|---|---|---|---|
+| One call, dashboard summary | 12 / 24 | 11 | $0.003 |
+| Agent with tools | 15 / 24 | 9 | $0.016 |
+| + claim verification | 16 / 24 | 8 | $0.024 |
+| + stratified hypothesis tests | 21 / 24 | 2 | $0.038 |
+| One call given the same stratified tables | 21 / 24 | 2 | $0.006 |
+
+The big gain came from giving the model the right evidence: stratified comparisons that separate confounded factors. A single call given those tables ties the agent at about a sixth of the cost. I do not claim an agent beats a single call on these cases. The agent's value here is the audit trail: every claim cites a tool result and is checked against it.
+
+**Simulated GPU fleet** (64 GPUs, 179,200 samples, three different faults plus two decoys, 9 incidents): the agent got 9 of 9 and a one-shot aggregate dump got 8 of 9. The scenarios are my own simulation.
+
+**Stored dashboard investigations:** 7 of 8 matched the injected fault. The miss is the "misleading deploy event" case, where the agent diagnosed prompt expansion and the truth was client concurrency. Its own evidence called concurrency "a significant amplifier", so it contradicted its conclusion. I left it in the demo.
+
+## Challenges
+
+- **The first benchmark was too easy.** On single-fault cases a one-line summary was enough, and a plain baseline scored the same as the agent. I built harder cases and found where both failed: confounded changes and a misleading deploy event.
+- **My validator checked the wrong thing.** The first citation check only confirmed that a cited tool call existed. The agent still wrote a claim that contradicted the result it cited. That led to the claim-verification pass.
+- **A fix I designed after seeing failures.** The stratified tool was added after the agent failed on these exact cases, and its factors match what I varied in the faults. It shows the method works on these fault families. It does not show it generalizes.
+- **Detector bugs found in a free dry run.** An idle GPU raised false alerts because a tiny baseline makes noise look like a large drop. I fixed it with a minimum-baseline rule.
+- **Prompt bloat is slow-burn on this endpoint.** Growing the prompt from about 200 to 3,700 tokens barely changed latency. It took 28,000 to 56,000 tokens to show a clear effect, so the fault had to be much larger than I first assumed.
+
+## What we learned
+
+- Evidence design matters more than the agent loop. Stratified tables lifted accuracy from 12 to 21 of 24, whether or not an agent fetched them.
+- Models anchor on the most visible change. In the confounded cases both the agent and the baseline blamed the 17x jump in input tokens.
+- Citing a tool call is not the same as being right about it. 4 to 7% of claims in first-pass reports contradicted or went beyond the data.
+- Abstaining is a feature. One case ended as `insufficient_evidence` with low confidence, which is better than a confident wrong answer.
+
+## What changed during the submission period
+
+ClusterDoctor is a new repository, and all its code was written during the submission period. Its first commit is dated 2026-10-17. It grew out of an earlier project of mine, Grid Co-Pilot, which does evidence-first root-cause analysis on electrical grid telemetry. ClusterDoctor reuses that idea and shares no code with it.
+
+## What's next
+
+- Test on telemetry from a real GPU cluster scraped from dcgm-exporter through Prometheus.
+- Write incident cases independently of the tool design, to check whether the stratified method generalizes.
+- Add fleet-scale queries where the data is too large to put in one prompt, which is where an agent has to fetch what it needs.
+- Hooks for a person to approve a recommended action.
+
+## Feedback for Nebius and NVIDIA
+
+### Token Factory
+
+1. **The 402 error does not say which budget ran out.** My runs failed with "Payment Required: You have exhausted your budget." It was not clear whether that meant the account balance or a limit on the API key. Naming the budget and showing the remaining amount in the error would save time.
+2. **Model IDs use inconsistent naming.** The Nemotron models I saw are `nvidia/Nemotron-3-Ultra-550b-a55b`, `nvidia/Nemotron-3_5-Lightning`, `nvidia/nemotron-3-super-120b-a12b` and `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B`. Case, hyphens and underscores all vary. It is easy to mistype an ID.
+3. **Lightning returns visible reasoning in the response content.** A short answer began with a "thinking process" preamble, and that text counts against `max_tokens`. A separate reasoning field, or a way to turn it off, would help latency-sensitive uses.
+4. **Server-side timing would turn a guess into evidence.** My telemetry came from client timers and the token counts in the streaming usage field, which worked well. I did not use any server-side timing such as queue time or time in prefill. If the API exposes it, documenting it would help. If it does not, adding it would let an application separate provider time from its own time, so "the provider is slow" can be an observation and not a leftover explanation.
+5. **Prompt size and latency.** On Lightning, latency barely moved from 200 to 3,700 input tokens and roughly doubled around 28,000. A short guide to how latency scales with context on each model would help people plan.
+
+### NVIDIA models
+
+- Nemotron 3 Ultra followed the tool-calling protocol reliably over the OpenAI-compatible API, including a custom `submit_diagnosis` tool with a strict schema. It followed a two-hypothesis testing protocol when told to.
+- Failure modes I measured: it anchors on the most visible change in confounded cases, and 4 to 7% of its first-pass claims misstated or went beyond the tool data. A second verification call fixed most of those.
+- It abstained appropriately on thin evidence once the schema had an `insufficient_evidence` option.
+
+## Built with
+
+Nebius Token Factory, NVIDIA Nemotron 3 Ultra, NVIDIA Nemotron 3.5 Lightning, Python, FastAPI, SQLite, React, Vite, Docker, Hugging Face Spaces.

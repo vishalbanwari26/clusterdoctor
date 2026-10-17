@@ -116,7 +116,7 @@ PYTHONPATH=src uv run python scripts/bench_eval.py
 
 ## Dashboard
 
-Eight stored incidents (5 inference with live Token Factory traffic, 3 simulated GPU) are replayed from `data/replays/` with no API spend. Each shows what the watcher saw (latency chart or 64-GPU heatmap), the investigation step by step, and the report with evidence citations, rejected hypotheses and the check results. "Reveal injected fault" shows the ground truth next to the diagnosis, including where the agent was wrong. "Run live" re-runs an investigation on Token Factory and is off unless enabled:
+Eight stored incidents (5 inference with live Token Factory traffic, 3 simulated GPU) are replayed from `data/replays/` with no API spend. The page is written for someone seeing it for the first time: an intro explains what it is, each incident has a plain-words summary, the AI's answer comes first with a plain explanation of the cause, and jargon (p95, stratified, Xid) has hover definitions. Below that: what the watcher saw (latency chart or 64-GPU heatmap), the investigation as a list of questions the agent asked the data with readable result tables, and the full report with evidence, ruled-out causes and a fact-check summary. **Watch it work** replays a saved run step by step. **Run it live** asks Nemotron again. **Reveal the answer key** shows what was injected next to the diagnosis, including where the agent was wrong.
 
 ```bash
 cd web && npm install && npm run build && cd ..          # build the UI once
