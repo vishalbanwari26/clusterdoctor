@@ -1,0 +1,194 @@
+{
+  "prompt_bloat_1": {
+    "t0": 1792190773.0269928,
+    "t1": 1792190781.143418,
+    "t2": 1792190814.485897,
+    "fault": "prompt_bloat",
+    "truth": "prompt_expansion",
+    "db": "bench/cases/prompt_bloat_1.db"
+  },
+  "prompt_bloat_2": {
+    "t0": 1792190814.495671,
+    "t1": 1792190822.264182,
+    "t2": 1792190862.685175,
+    "fault": "prompt_bloat",
+    "truth": "prompt_expansion",
+    "db": "bench/cases/prompt_bloat_2.db"
+  },
+  "prompt_bloat_3": {
+    "t0": 1792190862.695762,
+    "t1": 1792190870.8592541,
+    "t2": 1792190905.563606,
+    "fault": "prompt_bloat",
+    "truth": "prompt_expansion",
+    "db": "bench/cases/prompt_bloat_3.db"
+  },
+  "high_concurrency_1": {
+    "t0": 1792190905.5718458,
+    "t1": 1792190914.092989,
+    "t2": 1792190941.86345,
+    "fault": "high_concurrency",
+    "truth": "client_concurrency",
+    "db": "bench/cases/high_concurrency_1.db"
+  },
+  "high_concurrency_2": {
+    "t0": 1792190941.8710542,
+    "t1": 1792190950.22958,
+    "t2": 1792190976.66523,
+    "fault": "high_concurrency",
+    "truth": "client_concurrency",
+    "db": "bench/cases/high_concurrency_2.db"
+  },
+  "high_concurrency_3": {
+    "t0": 1792190976.672416,
+    "t1": 1792190985.535566,
+    "t2": 1792191012.277226,
+    "fault": "high_concurrency",
+    "truth": "client_concurrency",
+    "db": "bench/cases/high_concurrency_3.db"
+  },
+  "retry_storm_1": {
+    "t0": 1792191012.283724,
+    "t1": 1792191020.450805,
+    "t2": 1792191214.375479,
+    "fault": "retry_storm",
+    "truth": "retry_storm",
+    "db": "bench/cases/retry_storm_1.db"
+  },
+  "retry_storm_2": {
+    "t0": 1792191214.383925,
+    "t1": 1792191222.793139,
+    "t2": 1792191488.5338318,
+    "fault": "retry_storm",
+    "truth": "retry_storm",
+    "db": "bench/cases/retry_storm_2.db"
+  },
+  "retry_storm_3": {
+    "t0": 1792191488.5454478,
+    "t1": 1792191496.634523,
+    "t2": 1792191662.9427898,
+    "fault": "retry_storm",
+    "truth": "retry_storm",
+    "db": "bench/cases/retry_storm_3.db"
+  },
+  "healthy_1": {
+    "t0": 1792191662.955574,
+    "t1": 1792191670.997677,
+    "t2": 1792191695.073295,
+    "fault": "healthy",
+    "truth": "none",
+    "db": "bench/cases/healthy_1.db"
+  },
+  "healthy_2": {
+    "t0": 1792191695.080114,
+    "t1": 1792191703.1092029,
+    "t2": 1792191727.183957,
+    "fault": "healthy",
+    "truth": "none",
+    "db": "bench/cases/healthy_2.db"
+  },
+  "healthy_3": {
+    "t0": 1792191727.190722,
+    "t1": 1792191735.319438,
+    "t2": 1792191759.3517902,
+    "fault": "healthy",
+    "truth": "none",
+    "db": "bench/cases/healthy_3.db"
+  },
+  "overlap_1": {
+    "t0": 1792192124.7960262,
+    "t1": 1792192132.9208372,
+    "t2": 1792192373.1486669,
+    "fault": "overlap",
+    "truth": "retry_storm",
+    "db": "bench/cases/overlap_1.db"
+  },
+  "overlap_2": {
+    "t0": 1792192373.158966,
+    "t1": 1792192381.31735,
+    "t2": 1792192650.6664991,
+    "fault": "overlap",
+    "truth": "retry_storm",
+    "db": "bench/cases/overlap_2.db"
+  },
+  "overlap_3": {
+    "t0": 1792192650.677705,
+    "t1": 1792192658.4316459,
+    "t2": 1792193001.757646,
+    "fault": "overlap",
+    "truth": "retry_storm",
+    "db": "bench/cases/overlap_3.db"
+  },
+  "misleading_event_1": {
+    "t0": 1792193001.7764401,
+    "t1": 1792193009.767068,
+    "t2": 1792193102.802955,
+    "fault": "misleading_event",
+    "truth": "client_concurrency",
+    "db": "bench/cases/misleading_event_1.db"
+  },
+  "misleading_event_2": {
+    "t0": 1792193102.816718,
+    "t1": 1792193111.1576269,
+    "t2": 1792193202.4154902,
+    "fault": "misleading_event",
+    "truth": "client_concurrency",
+    "db": "bench/cases/misleading_event_2.db"
+  },
+  "misleading_event_3": {
+    "t0": 1792193202.427326,
+    "t1": 1792193210.101727,
+    "t2": 1792193300.996942,
+    "fault": "misleading_event",
+    "truth": "client_concurrency",
+    "db": "bench/cases/misleading_event_3.db"
+  },
+  "bloat_subset_1": {
+    "t0": 1792193301.009396,
+    "t1": 1792193308.742214,
+    "t2": 1792193361.998192,
+    "fault": "bloat_subset",
+    "truth": "prompt_expansion",
+    "db": "bench/cases/bloat_subset_1.db"
+  },
+  "bloat_subset_2": {
+    "t0": 1792193362.0066419,
+    "t1": 1792193369.781152,
+    "t2": 1792193422.833199,
+    "fault": "bloat_subset",
+    "truth": "prompt_expansion",
+    "db": "bench/cases/bloat_subset_2.db"
+  },
+  "bloat_subset_3": {
+    "t0": 1792193422.841619,
+    "t1": 1792193431.17203,
+    "t2": 1792193484.9284952,
+    "fault": "bloat_subset",
+    "truth": "prompt_expansion",
+    "db": "bench/cases/bloat_subset_3.db"
+  },
+  "provider_slowdown_1": {
+    "t0": 1792193484.93524,
+    "t1": 1792193492.79953,
+    "t2": 1792193591.0277061,
+    "fault": "provider_slowdown",
+    "truth": "provider_side",
+    "db": "bench/cases/provider_slowdown_1.db"
+  },
+  "provider_slowdown_2": {
+    "t0": 1792193591.038188,
+    "t1": 1792193600.0500422,
+    "t2": 1792193697.556257,
+    "fault": "provider_slowdown",
+    "truth": "provider_side",
+    "db": "bench/cases/provider_slowdown_2.db"
+  },
+  "provider_slowdown_3": {
+    "t0": 1792193697.5660238,
+    "t1": 1792193705.723294,
+    "t2": 1792193804.425354,
+    "fault": "provider_slowdown",
+    "truth": "provider_side",
+    "db": "bench/cases/provider_slowdown_3.db"
+  }
+}

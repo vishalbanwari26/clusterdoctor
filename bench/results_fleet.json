@@ -1,0 +1,209 @@
+[
+  {
+    "seed": 1,
+    "gpu": "node-02/5",
+    "truth": "thermal_throttling",
+    "dump_chars": 13243,
+    "raw_samples": 179200,
+    "agent": {
+      "root_cause": "thermal_throttling",
+      "confidence": "high",
+      "latency_s": 9.942757844924927,
+      "tool_calls": 5,
+      "cost_usd": 0.01446
+    },
+    "baseline": {
+      "root_cause": "thermal_throttling",
+      "confidence": "high",
+      "latency_s": 2.390979051589966,
+      "dump_chars": 13243,
+      "prompt_tokens": 6841,
+      "completion_tokens": 507,
+      "cost_usd": 0.008362
+    }
+  },
+  {
+    "seed": 1,
+    "gpu": "node-05/1",
+    "truth": "data_loader_bottleneck",
+    "dump_chars": 13244,
+    "raw_samples": 179200,
+    "agent": {
+      "root_cause": "data_loader_bottleneck",
+      "confidence": "high",
+      "latency_s": 9.517282009124756,
+      "tool_calls": 8,
+      "cost_usd": 0.016418
+    },
+    "baseline": {
+      "root_cause": "insufficient_evidence",
+      "confidence": "medium",
+      "latency_s": 7.653024673461914,
+      "dump_chars": 13244,
+      "prompt_tokens": 6842,
+      "completion_tokens": 1970,
+      "cost_usd": 0.012752
+    }
+  },
+  {
+    "seed": 1,
+    "gpu": "node-07/6",
+    "truth": "gpu_hardware_fault",
+    "dump_chars": 13242,
+    "raw_samples": 179200,
+    "agent": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "high",
+      "latency_s": 10.165533065795898,
+      "tool_calls": 8,
+      "cost_usd": 0.014592
+    },
+    "baseline": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "high",
+      "latency_s": 23.020103931427002,
+      "dump_chars": 13242,
+      "prompt_tokens": 6839,
+      "completion_tokens": 792,
+      "cost_usd": 0.009215
+    }
+  },
+  {
+    "seed": 2,
+    "gpu": "node-02/5",
+    "truth": "thermal_throttling",
+    "dump_chars": 13243,
+    "raw_samples": 179200,
+    "agent": {
+      "root_cause": "thermal_throttling",
+      "confidence": "high",
+      "latency_s": 9.32185411453247,
+      "tool_calls": 6,
+      "cost_usd": 0.016101
+    },
+    "baseline": {
+      "root_cause": "thermal_throttling",
+      "confidence": "high",
+      "latency_s": 3.0810868740081787,
+      "dump_chars": 13243,
+      "prompt_tokens": 6841,
+      "completion_tokens": 788,
+      "cost_usd": 0.009205
+    }
+  },
+  {
+    "seed": 2,
+    "gpu": "node-05/1",
+    "truth": "data_loader_bottleneck",
+    "dump_chars": 13243,
+    "raw_samples": 179200,
+    "agent": {
+      "root_cause": "data_loader_bottleneck",
+      "confidence": "medium",
+      "latency_s": 10.879675149917603,
+      "tool_calls": 7,
+      "cost_usd": 0.018598999999999997
+    },
+    "baseline": {
+      "root_cause": "data_loader_bottleneck",
+      "confidence": "medium",
+      "latency_s": 3.830526828765869,
+      "dump_chars": 13243,
+      "prompt_tokens": 6841,
+      "completion_tokens": 1180,
+      "cost_usd": 0.010381
+    }
+  },
+  {
+    "seed": 2,
+    "gpu": "node-07/6",
+    "truth": "gpu_hardware_fault",
+    "dump_chars": 13242,
+    "raw_samples": 179200,
+    "agent": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "high",
+      "latency_s": 9.754278898239136,
+      "tool_calls": 8,
+      "cost_usd": 0.015459
+    },
+    "baseline": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "high",
+      "latency_s": 2.2373812198638916,
+      "dump_chars": 13242,
+      "prompt_tokens": 6839,
+      "completion_tokens": 519,
+      "cost_usd": 0.008396
+    }
+  },
+  {
+    "seed": 3,
+    "gpu": "node-02/5",
+    "truth": "thermal_throttling",
+    "dump_chars": 13243,
+    "raw_samples": 179200,
+    "agent": {
+      "root_cause": "thermal_throttling",
+      "confidence": "high",
+      "latency_s": 9.402075052261353,
+      "tool_calls": 4,
+      "cost_usd": 0.012375
+    },
+    "baseline": {
+      "root_cause": "thermal_throttling",
+      "confidence": "high",
+      "latency_s": 2.8872461318969727,
+      "dump_chars": 13243,
+      "prompt_tokens": 6841,
+      "completion_tokens": 529,
+      "cost_usd": 0.008428
+    }
+  },
+  {
+    "seed": 3,
+    "gpu": "node-05/1",
+    "truth": "data_loader_bottleneck",
+    "dump_chars": 13244,
+    "raw_samples": 179200,
+    "agent": {
+      "root_cause": "data_loader_bottleneck",
+      "confidence": "high",
+      "latency_s": 12.838468074798584,
+      "tool_calls": 8,
+      "cost_usd": 0.021907
+    },
+    "baseline": {
+      "root_cause": "data_loader_bottleneck",
+      "confidence": "medium",
+      "latency_s": 5.061328172683716,
+      "dump_chars": 13244,
+      "prompt_tokens": 6842,
+      "completion_tokens": 1372,
+      "cost_usd": 0.010957999999999999
+    }
+  },
+  {
+    "seed": 3,
+    "gpu": "node-07/6",
+    "truth": "gpu_hardware_fault",
+    "dump_chars": 13242,
+    "raw_samples": 179200,
+    "agent": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "high",
+      "latency_s": 8.681323051452637,
+      "tool_calls": 8,
+      "cost_usd": 0.010332
+    },
+    "baseline": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "high",
+      "latency_s": 3.116051197052002,
+      "dump_chars": 13242,
+      "prompt_tokens": 6839,
+      "completion_tokens": 515,
+      "cost_usd": 0.008383999999999999
+    }
+  }
+]

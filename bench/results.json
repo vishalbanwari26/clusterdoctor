@@ -1,0 +1,1157 @@
+[
+  {
+    "case": "prompt_bloat_1",
+    "fault": "prompt_bloat",
+    "truth": "prompt_expansion",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 13.8,
+      "tool_calls": 8,
+      "valid_citations": 7,
+      "dropped_citations": 0,
+      "tokens": 10548,
+      "cost_usd": 0.015872
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.747296094894409,
+      "prompt_tokens": 426,
+      "completion_tokens": 774,
+      "tokens": 1200,
+      "cost_usd": 0.002748
+    }
+  },
+  {
+    "case": "prompt_bloat_1",
+    "fault": "prompt_bloat",
+    "truth": "prompt_expansion",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 12.9,
+      "tool_calls": 8,
+      "valid_citations": 6,
+      "dropped_citations": 0,
+      "tokens": 11595,
+      "cost_usd": 0.016429
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.553680896759033,
+      "prompt_tokens": 370,
+      "completion_tokens": 805,
+      "tokens": 1175,
+      "cost_usd": 0.002785
+    }
+  },
+  {
+    "case": "prompt_bloat_2",
+    "fault": "prompt_bloat",
+    "truth": "prompt_expansion",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 8.7,
+      "tool_calls": 4,
+      "valid_citations": 4,
+      "dropped_citations": 0,
+      "tokens": 7059,
+      "cost_usd": 0.009968999999999999
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 2.0474448204040527,
+      "prompt_tokens": 426,
+      "completion_tokens": 398,
+      "tokens": 824,
+      "cost_usd": 0.0016200000000000001
+    }
+  },
+  {
+    "case": "prompt_bloat_2",
+    "fault": "prompt_bloat",
+    "truth": "prompt_expansion",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 8.7,
+      "tool_calls": 4,
+      "valid_citations": 6,
+      "dropped_citations": 0,
+      "tokens": 8525,
+      "cost_usd": 0.011361
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.220554828643799,
+      "prompt_tokens": 370,
+      "completion_tokens": 731,
+      "tokens": 1101,
+      "cost_usd": 0.002563
+    }
+  },
+  {
+    "case": "prompt_bloat_3",
+    "fault": "prompt_bloat",
+    "truth": "prompt_expansion",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 9.7,
+      "tool_calls": 4,
+      "valid_citations": 4,
+      "dropped_citations": 0,
+      "tokens": 8666,
+      "cost_usd": 0.011675999999999999
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.178569793701172,
+      "prompt_tokens": 426,
+      "completion_tokens": 805,
+      "tokens": 1231,
+      "cost_usd": 0.002841
+    }
+  },
+  {
+    "case": "prompt_bloat_3",
+    "fault": "prompt_bloat",
+    "truth": "prompt_expansion",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 9.1,
+      "tool_calls": 6,
+      "valid_citations": 7,
+      "dropped_citations": 0,
+      "tokens": 7612,
+      "cost_usd": 0.011256
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 2.456393003463745,
+      "prompt_tokens": 369,
+      "completion_tokens": 578,
+      "tokens": 947,
+      "cost_usd": 0.002103
+    }
+  },
+  {
+    "case": "high_concurrency_1",
+    "fault": "high_concurrency",
+    "truth": "client_concurrency",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 10.6,
+      "tool_calls": 4,
+      "valid_citations": 5,
+      "dropped_citations": 0,
+      "tokens": 7617,
+      "cost_usd": 0.011536999999999999
+    },
+    "baseline": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 2.855159044265747,
+      "prompt_tokens": 420,
+      "completion_tokens": 700,
+      "tokens": 1120,
+      "cost_usd": 0.0025199999999999997
+    }
+  },
+  {
+    "case": "high_concurrency_1",
+    "fault": "high_concurrency",
+    "truth": "client_concurrency",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 14.2,
+      "tool_calls": 8,
+      "valid_citations": 9,
+      "dropped_citations": 0,
+      "tokens": 12329,
+      "cost_usd": 0.018151
+    },
+    "baseline": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 3.7026240825653076,
+      "prompt_tokens": 369,
+      "completion_tokens": 900,
+      "tokens": 1269,
+      "cost_usd": 0.003069
+    }
+  },
+  {
+    "case": "high_concurrency_2",
+    "fault": "high_concurrency",
+    "truth": "client_concurrency",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 7.4,
+      "tool_calls": 8,
+      "valid_citations": 5,
+      "dropped_citations": 0,
+      "tokens": 5955,
+      "cost_usd": 0.008990999999999999
+    },
+    "baseline": {
+      "root_cause": "client_concurrency",
+      "confidence": "medium",
+      "latency_s": 6.343234062194824,
+      "prompt_tokens": 419,
+      "completion_tokens": 1230,
+      "tokens": 1649,
+      "cost_usd": 0.004109
+    }
+  },
+  {
+    "case": "high_concurrency_2",
+    "fault": "high_concurrency",
+    "truth": "client_concurrency",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 8.9,
+      "tool_calls": 4,
+      "valid_citations": 7,
+      "dropped_citations": 0,
+      "tokens": 7383,
+      "cost_usd": 0.010936999999999999
+    },
+    "baseline": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 2.6928529739379883,
+      "prompt_tokens": 369,
+      "completion_tokens": 617,
+      "tokens": 986,
+      "cost_usd": 0.00222
+    }
+  },
+  {
+    "case": "high_concurrency_3",
+    "fault": "high_concurrency",
+    "truth": "client_concurrency",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 12.7,
+      "tool_calls": 6,
+      "valid_citations": 6,
+      "dropped_citations": 0,
+      "tokens": 9726,
+      "cost_usd": 0.014114000000000002
+    },
+    "baseline": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 2.7593538761138916,
+      "prompt_tokens": 421,
+      "completion_tokens": 755,
+      "tokens": 1176,
+      "cost_usd": 0.002686
+    }
+  },
+  {
+    "case": "high_concurrency_3",
+    "fault": "high_concurrency",
+    "truth": "client_concurrency",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 11.5,
+      "tool_calls": 8,
+      "valid_citations": 9,
+      "dropped_citations": 0,
+      "tokens": 11845,
+      "cost_usd": 0.016391
+    },
+    "baseline": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 2.1318199634552,
+      "prompt_tokens": 370,
+      "completion_tokens": 417,
+      "tokens": 787,
+      "cost_usd": 0.001621
+    }
+  },
+  {
+    "case": "retry_storm_1",
+    "fault": "retry_storm",
+    "truth": "retry_storm",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 60.0,
+    "agent": {
+      "root_cause": "retry_storm",
+      "confidence": "high",
+      "latency_s": 17.3,
+      "tool_calls": 8,
+      "valid_citations": 7,
+      "dropped_citations": 0,
+      "tokens": 9759,
+      "cost_usd": 0.016746999999999998
+    },
+    "baseline": {
+      "root_cause": "retry_storm",
+      "confidence": "medium",
+      "latency_s": 6.565000057220459,
+      "prompt_tokens": 422,
+      "completion_tokens": 1406,
+      "tokens": 1828,
+      "cost_usd": 0.004639999999999999
+    }
+  },
+  {
+    "case": "retry_storm_1",
+    "fault": "retry_storm",
+    "truth": "retry_storm",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 60.0,
+    "agent": {
+      "root_cause": "retry_storm",
+      "confidence": "high",
+      "latency_s": 18.2,
+      "tool_calls": 7,
+      "valid_citations": 5,
+      "dropped_citations": 0,
+      "tokens": 16854,
+      "cost_usd": 0.024412
+    },
+    "baseline": {
+      "root_cause": "retry_storm",
+      "confidence": "high",
+      "latency_s": 3.251797914505005,
+      "prompt_tokens": 368,
+      "completion_tokens": 825,
+      "tokens": 1193,
+      "cost_usd": 0.0028429999999999996
+    }
+  },
+  {
+    "case": "retry_storm_2",
+    "fault": "retry_storm",
+    "truth": "retry_storm",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 90.0,
+    "agent": {
+      "root_cause": "retry_storm",
+      "confidence": "high",
+      "latency_s": 8.3,
+      "tool_calls": 3,
+      "valid_citations": 4,
+      "dropped_citations": 0,
+      "tokens": 5804,
+      "cost_usd": 0.009044
+    },
+    "baseline": {
+      "root_cause": "retry_storm",
+      "confidence": "high",
+      "latency_s": 3.947930097579956,
+      "prompt_tokens": 425,
+      "completion_tokens": 1029,
+      "tokens": 1454,
+      "cost_usd": 0.003512
+    }
+  },
+  {
+    "case": "retry_storm_2",
+    "fault": "retry_storm",
+    "truth": "retry_storm",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 90.0,
+    "agent": {
+      "root_cause": "retry_storm",
+      "confidence": "high",
+      "latency_s": 24.8,
+      "tool_calls": 8,
+      "valid_citations": 5,
+      "dropped_citations": 0,
+      "tokens": 20358,
+      "cost_usd": 0.030122
+    },
+    "baseline": {
+      "root_cause": "insufficient_evidence",
+      "confidence": "high",
+      "latency_s": 3.8553481101989746,
+      "prompt_tokens": 371,
+      "completion_tokens": 771,
+      "tokens": 1142,
+      "cost_usd": 0.0026839999999999998
+    }
+  },
+  {
+    "case": "retry_storm_3",
+    "fault": "retry_storm",
+    "truth": "retry_storm",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 60.0,
+    "agent": {
+      "root_cause": "retry_storm",
+      "confidence": "high",
+      "latency_s": 12.6,
+      "tool_calls": 8,
+      "valid_citations": 7,
+      "dropped_citations": 0,
+      "tokens": 10474,
+      "cost_usd": 0.015458
+    },
+    "baseline": {
+      "root_cause": "retry_storm",
+      "confidence": "high",
+      "latency_s": 1.5106699466705322,
+      "prompt_tokens": 425,
+      "completion_tokens": 357,
+      "tokens": 782,
+      "cost_usd": 0.001496
+    }
+  },
+  {
+    "case": "retry_storm_3",
+    "fault": "retry_storm",
+    "truth": "retry_storm",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 60.0,
+    "agent": {
+      "root_cause": "retry_storm",
+      "confidence": "high",
+      "latency_s": 12.9,
+      "tool_calls": 4,
+      "valid_citations": 6,
+      "dropped_citations": 0,
+      "tokens": 9781,
+      "cost_usd": 0.014881
+    },
+    "baseline": {
+      "root_cause": "retry_storm",
+      "confidence": "medium",
+      "latency_s": 9.23012113571167,
+      "prompt_tokens": 371,
+      "completion_tokens": 1790,
+      "tokens": 2161,
+      "cost_usd": 0.005741
+    }
+  },
+  {
+    "case": "healthy_1",
+    "fault": "healthy",
+    "truth": "none",
+    "events": true,
+    "detected": false
+  },
+  {
+    "case": "healthy_2",
+    "fault": "healthy",
+    "truth": "none",
+    "events": true,
+    "detected": false
+  },
+  {
+    "case": "healthy_3",
+    "fault": "healthy",
+    "truth": "none",
+    "events": true,
+    "detected": false
+  },
+  {
+    "case": "overlap_1",
+    "fault": "overlap",
+    "truth": "retry_storm",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 70.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 12.4,
+      "tool_calls": 8,
+      "valid_citations": 5,
+      "dropped_citations": 0,
+      "tokens": 8854,
+      "cost_usd": 0.014218
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.674259901046753,
+      "prompt_tokens": 425,
+      "completion_tokens": 920,
+      "tokens": 1345,
+      "cost_usd": 0.0031850000000000003
+    }
+  },
+  {
+    "case": "overlap_1",
+    "fault": "overlap",
+    "truth": "retry_storm",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 70.0,
+    "agent": {
+      "root_cause": "retry_storm",
+      "confidence": "high",
+      "latency_s": 17.8,
+      "tool_calls": 7,
+      "valid_citations": 6,
+      "dropped_citations": 0,
+      "tokens": 10207,
+      "cost_usd": 0.018321
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 2.4632039070129395,
+      "prompt_tokens": 370,
+      "completion_tokens": 418,
+      "tokens": 788,
+      "cost_usd": 0.001624
+    }
+  },
+  {
+    "case": "overlap_2",
+    "fault": "overlap",
+    "truth": "retry_storm",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 60.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 15.4,
+      "tool_calls": 8,
+      "valid_citations": 7,
+      "dropped_citations": 0,
+      "tokens": 13196,
+      "cost_usd": 0.019984000000000002
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.602632761001587,
+      "prompt_tokens": 424,
+      "completion_tokens": 857,
+      "tokens": 1281,
+      "cost_usd": 0.002995
+    }
+  },
+  {
+    "case": "overlap_2",
+    "fault": "overlap",
+    "truth": "retry_storm",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 60.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 10.0,
+      "tool_calls": 8,
+      "valid_citations": 7,
+      "dropped_citations": 0,
+      "tokens": 6633,
+      "cost_usd": 0.010949
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 2.0505330562591553,
+      "prompt_tokens": 371,
+      "completion_tokens": 551,
+      "tokens": 922,
+      "cost_usd": 0.0020239999999999998
+    }
+  },
+  {
+    "case": "overlap_3",
+    "fault": "overlap",
+    "truth": "retry_storm",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 15.9,
+      "tool_calls": 8,
+      "valid_citations": 6,
+      "dropped_citations": 0,
+      "tokens": 13377,
+      "cost_usd": 0.020298999999999998
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.8928537368774414,
+      "prompt_tokens": 428,
+      "completion_tokens": 884,
+      "tokens": 1312,
+      "cost_usd": 0.00308
+    }
+  },
+  {
+    "case": "overlap_3",
+    "fault": "overlap",
+    "truth": "retry_storm",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 17.0,
+      "tool_calls": 6,
+      "valid_citations": 5,
+      "dropped_citations": 0,
+      "tokens": 11385,
+      "cost_usd": 0.018499
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.062303066253662,
+      "prompt_tokens": 373,
+      "completion_tokens": 836,
+      "tokens": 1209,
+      "cost_usd": 0.0028810000000000003
+    }
+  },
+  {
+    "case": "misleading_event_1",
+    "fault": "misleading_event",
+    "truth": "client_concurrency",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 15.0,
+      "tool_calls": 8,
+      "valid_citations": 6,
+      "dropped_citations": 0,
+      "tokens": 9687,
+      "cost_usd": 0.016811
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 2.7567012310028076,
+      "prompt_tokens": 426,
+      "completion_tokens": 800,
+      "tokens": 1226,
+      "cost_usd": 0.0028260000000000004
+    }
+  },
+  {
+    "case": "misleading_event_1",
+    "fault": "misleading_event",
+    "truth": "client_concurrency",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 14.3,
+      "tool_calls": 8,
+      "valid_citations": 5,
+      "dropped_citations": 0,
+      "tokens": 12598,
+      "cost_usd": 0.019268
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 6.933293104171753,
+      "prompt_tokens": 372,
+      "completion_tokens": 1572,
+      "tokens": 1944,
+      "cost_usd": 0.005088
+    }
+  },
+  {
+    "case": "misleading_event_2",
+    "fault": "misleading_event",
+    "truth": "client_concurrency",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 27.0,
+      "tool_calls": 8,
+      "valid_citations": 7,
+      "dropped_citations": 0,
+      "tokens": 12947,
+      "cost_usd": 0.026244999999999997
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.0694828033447266,
+      "prompt_tokens": 426,
+      "completion_tokens": 874,
+      "tokens": 1300,
+      "cost_usd": 0.0030480000000000004
+    }
+  },
+  {
+    "case": "misleading_event_2",
+    "fault": "misleading_event",
+    "truth": "client_concurrency",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "client_concurrency",
+      "confidence": "high",
+      "latency_s": 11.5,
+      "tool_calls": 8,
+      "valid_citations": 5,
+      "dropped_citations": 0,
+      "tokens": 10232,
+      "cost_usd": 0.015234000000000001
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.317012310028076,
+      "prompt_tokens": 371,
+      "completion_tokens": 806,
+      "tokens": 1177,
+      "cost_usd": 0.002789
+    }
+  },
+  {
+    "case": "misleading_event_3",
+    "fault": "misleading_event",
+    "truth": "client_concurrency",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 23.1,
+      "tool_calls": 8,
+      "valid_citations": 7,
+      "dropped_citations": 0,
+      "tokens": 11886,
+      "cost_usd": 0.023044
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.86073899269104,
+      "prompt_tokens": 427,
+      "completion_tokens": 874,
+      "tokens": 1301,
+      "cost_usd": 0.003049
+    }
+  },
+  {
+    "case": "misleading_event_3",
+    "fault": "misleading_event",
+    "truth": "client_concurrency",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 13.3,
+      "tool_calls": 6,
+      "valid_citations": 6,
+      "dropped_citations": 0,
+      "tokens": 10583,
+      "cost_usd": 0.016617
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "medium",
+      "latency_s": 5.339400053024292,
+      "prompt_tokens": 373,
+      "completion_tokens": 1255,
+      "tokens": 1628,
+      "cost_usd": 0.004138
+    }
+  },
+  {
+    "case": "bloat_subset_1",
+    "fault": "bloat_subset",
+    "truth": "prompt_expansion",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 9.9,
+      "tool_calls": 8,
+      "valid_citations": 7,
+      "dropped_citations": 0,
+      "tokens": 8232,
+      "cost_usd": 0.012602
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.299337148666382,
+      "prompt_tokens": 418,
+      "completion_tokens": 695,
+      "tokens": 1113,
+      "cost_usd": 0.002503
+    }
+  },
+  {
+    "case": "bloat_subset_1",
+    "fault": "bloat_subset",
+    "truth": "prompt_expansion",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 5.9,
+      "tool_calls": 4,
+      "valid_citations": 5,
+      "dropped_citations": 0,
+      "tokens": 5371,
+      "cost_usd": 0.007937
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.548105001449585,
+      "prompt_tokens": 369,
+      "completion_tokens": 724,
+      "tokens": 1093,
+      "cost_usd": 0.0025410000000000003
+    }
+  },
+  {
+    "case": "bloat_subset_2",
+    "fault": "bloat_subset",
+    "truth": "prompt_expansion",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 12.7,
+      "tool_calls": 8,
+      "valid_citations": 7,
+      "dropped_citations": 0,
+      "tokens": 10236,
+      "cost_usd": 0.015268
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.2417919635772705,
+      "prompt_tokens": 417,
+      "completion_tokens": 737,
+      "tokens": 1154,
+      "cost_usd": 0.002628
+    }
+  },
+  {
+    "case": "bloat_subset_2",
+    "fault": "bloat_subset",
+    "truth": "prompt_expansion",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 11.3,
+      "tool_calls": 8,
+      "valid_citations": 8,
+      "dropped_citations": 0,
+      "tokens": 9956,
+      "cost_usd": 0.014328
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 4.190045118331909,
+      "prompt_tokens": 368,
+      "completion_tokens": 698,
+      "tokens": 1066,
+      "cost_usd": 0.002462
+    }
+  },
+  {
+    "case": "bloat_subset_3",
+    "fault": "bloat_subset",
+    "truth": "prompt_expansion",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 40.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 9.9,
+      "tool_calls": 4,
+      "valid_citations": 4,
+      "dropped_citations": 0,
+      "tokens": 9012,
+      "cost_usd": 0.012572
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 2.46116304397583,
+      "prompt_tokens": 415,
+      "completion_tokens": 436,
+      "tokens": 851,
+      "cost_usd": 0.0017230000000000001
+    }
+  },
+  {
+    "case": "bloat_subset_3",
+    "fault": "bloat_subset",
+    "truth": "prompt_expansion",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 40.0,
+    "agent": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 14.1,
+      "tool_calls": 8,
+      "valid_citations": 6,
+      "dropped_citations": 0,
+      "tokens": 10334,
+      "cost_usd": 0.015482
+    },
+    "baseline": {
+      "root_cause": "prompt_expansion",
+      "confidence": "high",
+      "latency_s": 3.193448066711426,
+      "prompt_tokens": 367,
+      "completion_tokens": 684,
+      "tokens": 1051,
+      "cost_usd": 0.002419
+    }
+  },
+  {
+    "case": "provider_slowdown_1",
+    "fault": "provider_slowdown",
+    "truth": "provider_side",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "provider_side",
+      "confidence": "high",
+      "latency_s": 9.8,
+      "tool_calls": 8,
+      "valid_citations": 5,
+      "dropped_citations": 0,
+      "tokens": 6266,
+      "cost_usd": 0.010036
+    },
+    "baseline": {
+      "root_cause": "provider_side",
+      "confidence": "high",
+      "latency_s": 2.6208291053771973,
+      "prompt_tokens": 368,
+      "completion_tokens": 584,
+      "tokens": 952,
+      "cost_usd": 0.00212
+    }
+  },
+  {
+    "case": "provider_slowdown_1",
+    "fault": "provider_slowdown",
+    "truth": "provider_side",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "provider_side",
+      "confidence": "high",
+      "latency_s": 15.3,
+      "tool_calls": 8,
+      "valid_citations": 10,
+      "dropped_citations": 0,
+      "tokens": 12139,
+      "cost_usd": 0.018087
+    },
+    "baseline": {
+      "root_cause": "provider_side",
+      "confidence": "high",
+      "latency_s": 2.13162899017334,
+      "prompt_tokens": 368,
+      "completion_tokens": 553,
+      "tokens": 921,
+      "cost_usd": 0.0020269999999999997
+    }
+  },
+  {
+    "case": "provider_slowdown_2",
+    "fault": "provider_slowdown",
+    "truth": "provider_side",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "provider_side",
+      "confidence": "medium",
+      "latency_s": 12.7,
+      "tool_calls": 8,
+      "valid_citations": 6,
+      "dropped_citations": 0,
+      "tokens": 11563,
+      "cost_usd": 0.016391
+    },
+    "baseline": {
+      "root_cause": "provider_side",
+      "confidence": "high",
+      "latency_s": 2.819488763809204,
+      "prompt_tokens": 366,
+      "completion_tokens": 623,
+      "tokens": 989,
+      "cost_usd": 0.002235
+    }
+  },
+  {
+    "case": "provider_slowdown_2",
+    "fault": "provider_slowdown",
+    "truth": "provider_side",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "provider_side",
+      "confidence": "high",
+      "latency_s": 9.2,
+      "tool_calls": 8,
+      "valid_citations": 6,
+      "dropped_citations": 0,
+      "tokens": 10900,
+      "cost_usd": 0.014401999999999998
+    },
+    "baseline": {
+      "root_cause": "provider_side",
+      "confidence": "high",
+      "latency_s": 2.7650060653686523,
+      "prompt_tokens": 366,
+      "completion_tokens": 627,
+      "tokens": 993,
+      "cost_usd": 0.002247
+    }
+  },
+  {
+    "case": "provider_slowdown_3",
+    "fault": "provider_slowdown",
+    "truth": "provider_side",
+    "events": true,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "provider_side",
+      "confidence": "medium",
+      "latency_s": 7.3,
+      "tool_calls": 8,
+      "valid_citations": 8,
+      "dropped_citations": 0,
+      "tokens": 6210,
+      "cost_usd": 0.009868
+    },
+    "baseline": {
+      "root_cause": "provider_side",
+      "confidence": "high",
+      "latency_s": 2.387471914291382,
+      "prompt_tokens": 368,
+      "completion_tokens": 634,
+      "tokens": 1002,
+      "cost_usd": 0.00227
+    }
+  },
+  {
+    "case": "provider_slowdown_3",
+    "fault": "provider_slowdown",
+    "truth": "provider_side",
+    "events": false,
+    "detected": true,
+    "detect_delay_s": 20.0,
+    "agent": {
+      "root_cause": "provider_side",
+      "confidence": "high",
+      "latency_s": 9.6,
+      "tool_calls": 8,
+      "valid_citations": 5,
+      "dropped_citations": 0,
+      "tokens": 11784,
+      "cost_usd": 0.017022
+    },
+    "baseline": {
+      "root_cause": "provider_side",
+      "confidence": "high",
+      "latency_s": 1.7045702934265137,
+      "prompt_tokens": 368,
+      "completion_tokens": 475,
+      "tokens": 843,
+      "cost_usd": 0.001793
+    }
+  }
+]
