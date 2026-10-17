@@ -44,8 +44,8 @@ def plan(seed: int = 0) -> list[dict]:
     return cases
 
 
-def plan_v2(seed: int = 3) -> list[dict]:
-    """v2: A 3, B 3, D 3 as before; C is ONE clean slot issue (slot 3 on 16 nodes) with 5 different flagged GPUs among them."""
+def plan_v2(seed: int = 3, slot: int = 3) -> list[dict]:
+    """v2: A 3, B 3, D 3 as before; C is ONE clean slot issue (one slot index on 16 nodes) with 5 different flagged GPUs among them."""
     rng = random.Random(seed); cases = []
     for i in range(3):
         cases.append({"family": "A", "truth": "gpu_thermal_isolated", "rack": i, "node": node_id(i, rng.randrange(NODES)), "gpu": rng.randrange(GPUS)})
@@ -59,7 +59,7 @@ def plan_v2(seed: int = 3) -> list[dict]:
     nodes = [node_id(r, n) for r in racks for n in rng.sample(range(NODES), 2)]
     flagged = rng.sample(nodes, 5)
     for nd in flagged:
-        cases.append({"family": "C", "truth": "slot_position_issue", "slot": 3, "nodes": nodes, "node": nd, "gpu": 3})
+        cases.append({"family": "C", "truth": "slot_position_issue", "slot": slot, "nodes": nodes, "node": nd, "gpu": slot})
     for i, c in enumerate(cases): c["id"] = f"v{i:02d}"
     return cases
 
@@ -111,12 +111,13 @@ class BigFleetTools:
     def _win(self, w): return {"baseline": BASE_WIN, "incident": INC_WIN}[w]
 
     def _gpu_means(self, metric: str, w: str) -> dict:
+        cache = self.store.__dict__.setdefault("_bf_cache", {})        # shared by every case on the same fleet
         key = (metric, w)
-        if key not in self._cache:
+        if key not in cache:
             a, b = self._win(w)
-            self._cache[key] = {(r["node"], r["gpu"]): r["m"] for r in self.store.db.execute(
+            cache[key] = {(r["node"], r["gpu"]): r["m"] for r in self.store.db.execute(
                 "SELECT node, gpu, AVG(value) m FROM gpu_metrics WHERE metric=? AND ts>=? AND ts<? GROUP BY node, gpu", (METRIC[metric], a, b))}
-        return self._cache[key]
+        return cache[key]
 
     def compare_windows(self) -> dict:
         return {w: {m: round(self._gpu_means(m, w)[(self.node, self.gpu)], 1) for m in METRIC} for w in ("baseline", "incident")}

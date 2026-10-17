@@ -45,5 +45,26 @@ export const TOOLS = {
   host_cpu: { title: (a) => `Checked the host CPU (${win(a.window)})`, why: "Data loading runs on the CPU. A maxed-out CPU can starve the GPU." },
   peer_gpus: { title: () => "Compared with the other GPUs on the same machine", why: "Is the problem one GPU or the whole node?" },
 };
+// Sections of the fixed evidence pack (collected by code, not chosen by the model).
+Object.assign(TOOLS, {
+  pack_windows: { title: () => "Compared the normal period with the incident", why: "Shows what changed overall." },
+  pack_events: { title: () => "Looked for deploys and config changes", why: "A recorded change may explain the timing." },
+  pack_retries_baseline: { title: () => "Latency by number of retries (normal period)", why: "Are retried requests the slow ones?" },
+  pack_retries_incident: { title: () => "Latency by number of retries (incident)", why: "Are retried requests the slow ones?" },
+  pack_strat_input_retries: { title: () => "Compared prompt size with retries (both periods)", why: "Changes one factor while holding the other fixed, to separate overlapping causes." },
+  pack_strat_input_concurrency: { title: () => "Compared prompt size with concurrency (both periods)", why: "Changes one factor while holding the other fixed, to separate overlapping causes." },
+  pack_strat_retries_concurrency: { title: () => "Compared retries with concurrency (both periods)", why: "Changes one factor while holding the other fixed, to separate overlapping causes." },
+  pack_effect_split: { title: () => "Worked out which factor explains the slowdown", why: "Uses only variation inside the incident window, and says which factors cannot be told apart." },
+  pack_gpu_windows: { title: () => "Compared the normal period with the incident", why: "Utilization, temperature, power and clocks for the flagged GPU." },
+  pack_gpu_throttle_baseline: { title: () => "Throttling and GPU errors (normal period)", why: "Throttling points to heat, Xid errors point to the driver." },
+  pack_gpu_throttle_incident: { title: () => "Throttling and GPU errors (incident)", why: "Throttling points to heat, Xid errors point to the driver." },
+  pack_gpu_pattern_baseline: { title: () => "How utilization behaves over time (normal period)", why: "Steady-but-lower and bursty-and-starved mean different things." },
+  pack_gpu_pattern_incident: { title: () => "How utilization behaves over time (incident)", why: "Steady-but-lower and bursty-and-starved mean different things." },
+  pack_gpu_host_cpu_baseline: { title: () => "Host CPU (normal period)", why: "Data loading runs on the CPU. A maxed-out CPU can starve the GPU." },
+  pack_gpu_host_cpu_incident: { title: () => "Host CPU (incident)", why: "Data loading runs on the CPU. A maxed-out CPU can starve the GPU." },
+  pack_gpu_peers: { title: () => "Compared with the other GPUs on the same machine", why: "Is the problem one GPU or the whole node?" },
+  pack_gpu_xid_catalog: { title: () => "What the Xid error code means (NVIDIA catalog)", why: "Only a few codes are in the local catalog." },
+});
+
 export const toolTitle = (t, args) => TOOLS[t]?.title(args) ?? pretty(t);
 export const toolWhy = (t) => TOOLS[t]?.why ?? "";

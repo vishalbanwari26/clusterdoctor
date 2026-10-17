@@ -11,11 +11,11 @@ Fill the bracketed items before submitting: `[SPACE URL]`, `[VIDEO URL]`. Everyt
 
 ## Tagline
 
-From monitoring symptoms to diagnosing root causes.
+Watchers catch it, code gathers the evidence, Nemotron writes the report, and a second call checks every claim.
 
 ## Short description
 
-ClusterDoctor watches telemetry from an AI inference app and a GPU fleet, opens an incident when something degrades, and investigates the cause with NVIDIA Nemotron on Nebius Token Factory. Each report lists the evidence, the hypotheses it ruled out and what is still uncertain.
+ClusterDoctor watches an AI inference app and a GPU fleet. When something degrades it builds a fixed evidence pack, has NVIDIA Nemotron on Nebius Token Factory write the report, and checks every claim in it against the evidence. A tool-using agent steps in only when that check fails. I tested whether the agent diagnoses better than one well-built call; it did not, so the one-call workflow is the default.
 
 ## Inspiration
 
@@ -25,18 +25,17 @@ Monitoring tells you what is happening. The first hour of an incident is spent w
 
 ## What it does
 
-ClusterDoctor has three parts.
+1. **Watchers** (statistics, no model). A latency watcher (p95 above 1.5 times baseline), a GPU utilization watcher, a z-score watcher that catches weak but consistent shifts in utilization or temperature (18 of 18 simulated incidents on unseen seeds with no false alerts, against 12 of 18 before), and an Xid watcher that fires when the driver's error code changes.
+2. **An evidence pack** (code, no model). Window comparisons, deploy events, retries, stratified latency tables that change one factor while holding another fixed, and an **effect split** that says which factor explains the slowdown using only variation inside the incident window, and which factors cannot be told apart. For GPUs: throttle and Xid state, utilization pattern, host CPU, peers, and NVIDIA's Xid catalog.
+3. **One report call and a claim check.** Nemotron 3 Ultra writes the report under a strict JSON schema, so labels and citations cannot be free text. A second call tests every factual claim against the pack, with one revision.
+4. **Escalation.** If the answer abstains, has low confidence or still fails the check, a tool-using agent takes over. This path was rarely needed in my runs.
 
-1. **Watchers.** Plain statistics, no model. A latency watcher opens an incident when p95 stays above 1.5 times its baseline for two windows. A GPU watcher opens one when a GPU's utilization stays 40% below its own baseline for two windows. GPUs that were never busy are ignored.
-2. **An investigation agent.** Nemotron 3 Ultra gets read-only tools and works the incident. It compares windows, reads deploy events and splits latency by input size, retries and concurrency. For GPUs it reads temperature, clocks, throttle reasons, Xid errors, host CPU and peer GPUs. It has to test its top two hypotheses with a stratified comparison before it can answer.
-3. **Checks on the answer.** Every citation must point to a tool call that happened. A second pass checks each factual or numeric claim against the tool results, and the agent has to revise any that conflict. If no evidence survives, the answer becomes `insufficient_evidence`.
-
-The dashboard shows what the watcher saw, the investigation step by step, and the report. A "Reveal injected fault" button shows the ground truth next to the diagnosis, including where the agent got it wrong. ClusterDoctor never changes infrastructure. It recommends actions and a person approves them.
+The dashboard shows what the watcher saw, the evidence the code collected, and the report. A "Reveal the answer key" button shows the ground truth beside the diagnosis, including where the system was wrong. ClusterDoctor never changes infrastructure. It recommends actions and a person approves them.
 
 ## How we built it
 
 - **Inference app under test:** real calls to `nvidia/Nemotron-3_5-Lightning` on Token Factory. All latency, time to first token, token counts and retry data in the benchmarks come from those calls.
-- **Investigation, claim checking and the baseline:** `nvidia/Nemotron-3-Ultra-550b-a55b` on Token Factory, through the OpenAI-compatible API with tool calling.
+- **Report, claim check and the escalation agent:** `nvidia/Nemotron-3-Ultra-550b-a55b` on Token Factory, through the OpenAI-compatible API (strict JSON schema for the report, tool calling for the agent).
 - **Backend:** Python and FastAPI, SQLite for telemetry.
 - **Frontend:** React and Vite, dark mode, hand-drawn SVG charts.
 - **Hosting:** a Docker Space. Stored investigations replay with no API use, and "Run live" calls Token Factory with per-visitor and daily limits.
@@ -52,9 +51,9 @@ I do not have a GPU, so I was careful about this.
 
 ## Nemotron and Token Factory use
 
-- Every investigation is a set of live Token Factory calls to Nemotron 3 Ultra: tool selection, hypothesis tests, the diagnosis, and the claim check.
+- Every report is live Token Factory calls to Nemotron 3 Ultra: the report and the claim check, plus tool calls on the rare escalation.
 - The workload being diagnosed runs on Nemotron 3.5 Lightning through the same API, which keeps the demo cheap and gives the investigator real telemetry from the platform it runs on.
-- Using two models for two jobs kept cost down. An investigation costs about $0.02 to $0.06 and takes 20 to 70 seconds.
+- Using two models for two jobs kept cost down. A workflow report costs about $0.02 and takes 15 to 30 seconds; an escalation to the agent costs $0.07 to $0.13.
 - Token Factory's streaming usage field gave exact input and output token counts for every request, which the analysis depends on.
 
 ## Results
@@ -81,6 +80,8 @@ The big gain came from giving the model the right evidence: stratified compariso
 
 **Stored dashboard investigations (simulated GPU and Token Factory):** 7 of 8 matched the injected fault. The miss is the "misleading deploy event" case, where the agent diagnosed prompt expansion and the truth was client concurrency. Its own evidence called concurrency "a significant amplifier", so it contradicted its conclusion. I left it in the demo.
 
+**Improving the workflow (Test 5, pre-registered, $0.99 of a $1.00 cap).** Computing an effect split in code and enforcing a strict schema took the one-call arm from 21 to 23 of 24 on the Token Factory cases (16/16 vs 14/16 on dev, but 7/8 vs 7/8 on the weak hold-out, and two things changed at once). A majority of three samples kept 23/24 and removed the one confident wrong answer. The fleet-scale part did not complete: strict-schema decoding degenerated into endless whitespace on the longer prompts (5 of 6 held-out calls), and a token-cap mistake of mine wasted $0.28 before I noticed. Ten dashboard incidents were rebuilt with the workflow at about $0.019 each: a demonstration, not a test.
+
 ## Challenges
 
 - **The first benchmark was too easy.** On single-fault cases a one-line summary was enough, and a plain baseline scored the same as the agent. I built harder cases and found where both failed: confounded changes and a misleading deploy event.
@@ -91,7 +92,8 @@ The big gain came from giving the model the right evidence: stratified compariso
 
 ## What we learned
 
-- Evidence design matters more than the agent loop. Stratified tables lifted accuracy from 12 to 21 of 24, whether or not an agent fetched them.
+- Evidence design matters more than the agent loop. Stratified tables lifted accuracy from 12 to 21 of 24, and a computed effect split plus a strict schema reached 23 of 24, whether or not an agent fetched anything. That is why the one-call workflow is the default.
+- Strict-schema decoding is useful and fragile: it removes format errors, but on long prompts it can degenerate into whitespace, so it needs a token cap and a fallback.
 - Models anchor on the most visible change. In the confounded cases both the agent and the baseline blamed the 17x jump in input tokens.
 - Citing a tool call is not the same as being right about it. 4 to 7% of claims in first-pass reports contradicted or went beyond the data.
 - Abstaining is a feature. One case ended as `insufficient_evidence` with low confidence, which is better than a confident wrong answer.

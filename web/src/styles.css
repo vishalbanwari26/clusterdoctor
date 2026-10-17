@@ -199,3 +199,5 @@ code, pre { font-family: var(--mono); font-size: 12.5px; }
 .source.real { color: var(--good); }
 .attrib { margin: 4px 0 0; font-size: 12px; color: var(--text-muted); max-width: 90ch; }
 .attrib a { color: var(--series-1); }
+
+.escal { margin: 0 0 8px; padding: 6px 10px; border: 1px solid var(--warning); border-radius: 6px; color: var(--text-secondary); font-size: 13px; }

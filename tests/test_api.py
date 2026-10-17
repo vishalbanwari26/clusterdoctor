@@ -35,16 +35,15 @@ def test_live_rerun_disabled_by_default(monkeypatch):
 
 def _stub_live(monkeypatch, fail=False):
     from clusterdoctor import agent, replay
-    from clusterdoctor.agent import Investigation
     monkeypatch.setenv("CD_ALLOW_LIVE", "1"); monkeypatch.setenv("NEBIUS_API_KEY", "test-key-not-real")
     monkeypatch.setattr(agent, "nemotron_chat", lambda *a, **k: None)
+
     def run(*a, **k):
         if fail:
             raise RuntimeError("secret-looking provider detail test-key-not-real")
-        return Investigation(diagnosis={"root_cause": "retry_storm", "confidence": "high", "evidence": [],
-                                        "rejected_hypotheses": [], "uncertainties": [], "recommended_actions": []})
-    monkeypatch.setattr(replay, "run_app_investigation", run)
-    monkeypatch.setattr(replay, "run_gpu_investigation", run)
+        return {"diagnosis": {"root_cause": "retry_storm", "confidence": "high", "evidence": [], "rejected_hypotheses": [],
+                              "uncertainties": [], "recommended_actions": []}, "trace": [], "workflow": {"escalated": False}}
+    monkeypatch.setattr(replay, "run_live_workflow", run)
     from clusterdoctor.limits import LiveGuard
     monkeypatch.setattr(api, "guard", LiveGuard(daily_cap=3, per_ip=1, max_concurrent=2))
 

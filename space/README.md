@@ -5,13 +5,13 @@ colorTo: gray
 sdk: docker
 app_port: 7860
 license: mit
-short_description: Agentic root-cause analysis for AI inference and GPU fleets, on Nemotron
+short_description: Evidence-checked root-cause reports for AI inference and GPU fleets, on Nemotron
 ---
 
 # ClusterDoctor
 
-Watches telemetry from an AI inference app and a GPU fleet, opens an incident when something degrades,
-and investigates the root cause with Nemotron on Nebius Token Factory.
+Watchers open an incident when an AI inference app or a GPU fleet degrades. Code gathers a fixed evidence pack, one Nemotron call on Nebius Token Factory
+writes the report, and a second call checks every claim against the evidence. A tool-using agent steps in only when that check fails.
 
 Stored investigations replay with no API use. "Run live" re-runs one on Token Factory, limited per visitor
 per day. The GPU fleet is simulated and labelled as such.

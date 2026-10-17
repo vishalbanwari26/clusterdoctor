@@ -9,13 +9,13 @@ export default function Intro({ onClose }) {
       </div>
       <p>
         When an AI service or a GPU slows down, a dashboard shows <em>that</em> something is wrong. ClusterDoctor finds
-        out <em>why</em>. A simple check spots the problem, then an AI agent (NVIDIA Nemotron on Nebius Token Factory)
-        investigates it and writes a report you can verify.
+        out <em>why</em>. A simple check spots the problem, code gathers a fixed set of evidence, one NVIDIA Nemotron call (on Nebius Token Factory)
+        writes the report, and a second call checks every claim against that evidence. A tool-using agent steps in only if that check fails.
       </p>
       <ol className="introsteps">
         <li><b>Pick an incident</b> on the left.</li>
         <li><b>See what the watcher saw</b>: the chart or GPU map that triggered it.</li>
-        <li><b>Follow the investigation</b>: each step is a question the agent asked the data.</li>
+        <li><b>Follow the report being built</b>: each step is a piece of evidence the code collected before the AI wrote anything.</li>
         <li><b>Read the diagnosis</b>, then click <i>Reveal the answer key</i> to see what was really wrong.</li>
       </ol>
       <p className="note">

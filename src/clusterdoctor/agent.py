@@ -101,8 +101,12 @@ def nemotron_chat(model: str | None = None) -> Chat:
                     base_url=os.environ.get("NEBIUS_BASE_URL", "https://api.tokenfactory.nebius.com/v1/"))
     model = model or os.environ.get("CD_AGENT_MODEL", "nvidia/Nemotron-3-Ultra-550b-a55b")
 
-    def chat(messages, tools):
+    def chat(messages, tools, response_format=None, max_tokens=None):
         kwargs = {"tools": tools} if tools else {}
+        if max_tokens:
+            kwargs["max_tokens"] = max_tokens     # strict-schema decoding can degenerate into endless whitespace; cap it
+        if response_format:
+            kwargs["response_format"] = response_format        # strict JSON schema: Token Factory enforces enums with it
         resp = client.chat.completions.create(model=model, messages=messages, **kwargs)
         m = resp.choices[0].message
         return {"content": m.content,

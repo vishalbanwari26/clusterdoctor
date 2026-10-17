@@ -86,3 +86,19 @@ def test_hidden_xid_tools_cannot_leak_xid():
     names = {x["function"]["name"] for x in HIDDEN_SPECS}
     assert names == {"compare_windows", "util_pattern", "peer_gpus", "submit_diagnosis"}
     assert "driver_error_reported" in LABELS
+
+
+def test_zscore_watcher_catches_weak_consistent_shifts_and_ignores_decoys():
+    from clusterdoctor.fleet import detect_zscore
+    from clusterdoctor.gpu import SCHEMA, TEMP, UTIL
+    import random
+    rng = random.Random(0); s = Store(":memory:"); s.db.executescript(SCHEMA); rows = []
+    for t in range(0, 1800, 30):
+        for g in range(3):
+            u = 96 + rng.gauss(0, 2); tp = 62 + rng.gauss(0, 1.5)
+            if g == 1 and t >= 900: tp += 8                                  # weak consistent temperature rise
+            if g == 2 and 900 <= t < 945: u = 20                             # 45 s dip: a decoy
+            rows += [(t, "n", g, UTIL, u, "sim"), (t, "n", g, TEMP, tp, "sim")]
+    s.db.executemany("INSERT INTO gpu_metrics VALUES (?,?,?,?,?,?)", rows); s.db.commit()
+    found = {(i.gpu, i.metric) for i in detect_zscore(s, (0, 800), 900, 1800)}
+    assert found == {(1, "temp")}

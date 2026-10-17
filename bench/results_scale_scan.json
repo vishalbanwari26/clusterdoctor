@@ -1,0 +1,74 @@
+{
+ "design_sha256": "ab56cf2b686b8bc8",
+ "rows": [
+  {
+   "fleet": "dev",
+   "id": "v00",
+   "family": "A",
+   "truth": "gpu_thermal_isolated",
+   "root_cause": "gpu_thermal_isolated",
+   "confidence": "high",
+   "cost": 0.011616
+  },
+  {
+   "fleet": "heldout",
+   "id": "v00",
+   "family": "A",
+   "truth": "gpu_thermal_isolated",
+   "root_cause": "unparseable",
+   "confidence": "low",
+   "cost": 0.028932,
+   "attempts": 2
+  },
+  {
+   "fleet": "heldout",
+   "id": "v01",
+   "family": "A",
+   "truth": "gpu_thermal_isolated",
+   "root_cause": "unparseable",
+   "confidence": "low",
+   "cost": 0.028932,
+   "attempts": 2
+  },
+  {
+   "fleet": "heldout",
+   "id": "v02",
+   "family": "A",
+   "truth": "gpu_thermal_isolated",
+   "root_cause": "gpu_thermal_isolated",
+   "confidence": "high",
+   "cost": 0.011724,
+   "attempts": 1
+  },
+  {
+   "fleet": "heldout",
+   "id": "v03",
+   "family": "B",
+   "truth": "rack_cooling_failure",
+   "root_cause": "unparseable",
+   "confidence": "low",
+   "cost": 0.028934,
+   "attempts": 2
+  },
+  {
+   "fleet": "heldout",
+   "id": "v04",
+   "family": "B",
+   "truth": "rack_cooling_failure",
+   "root_cause": "unparseable",
+   "confidence": "low",
+   "cost": 0.028934,
+   "attempts": 2
+  },
+  {
+   "fleet": "heldout",
+   "id": "v05",
+   "family": "B",
+   "truth": "rack_cooling_failure",
+   "root_cause": "unparseable",
+   "confidence": "low",
+   "cost": 0.028934,
+   "attempts": 2
+  }
+ ]
+}

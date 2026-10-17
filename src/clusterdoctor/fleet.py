@@ -99,3 +99,63 @@ def detect_xid_change(store: Store, start: float, end: float) -> list[XidInciden
                 break
             prev = v
     return out
+
+
+@dataclass
+class ZIncident:
+    node: str
+    gpu: int
+    metric: str                  # "util" (a drop) or "temp" (a rise)
+    opened_at: float
+    baseline: float
+    observed: float
+    z: float
+    window: tuple[float, float] = (0.0, 0.0)
+
+    def summary(self) -> str:
+        what = "utilization fell" if self.metric == "util" else "temperature rose"
+        unit = "%" if self.metric == "util" else " C"
+        return f"{self.node} GPU {self.gpu}: {what} from {self.baseline:.0f}{unit} to {self.observed:.0f}{unit}"
+
+
+def _series(store: Store, node: str, gpu: int, metric: str, start: float, end: float) -> list[tuple[float, float]]:
+    return [(r["ts"], r["value"]) for r in store.db.execute(
+        "SELECT ts, value FROM gpu_metrics WHERE node=? AND gpu=? AND metric=? AND ts>=? AND ts<? ORDER BY ts", (node, gpu, metric, start, end))]
+
+
+def detect_zscore(store: Store, baseline: tuple[float, float], start: float, end: float, window_s: float = 120.0,
+                  z_thr: float = 5.0, sustain: int = 2, min_samples: int = 2, min_baseline_util: float = 20.0,
+                  min_base_samples: int = 20) -> list[ZIncident]:
+    """Per GPU, a utilization drop or a temperature rise measured in standard errors of the baseline, for `sustain` windows.
+
+    Weak but consistent shifts that a fixed percentage threshold misses are caught; noisy GPUs need a larger shift, because the
+    baseline standard deviation is measured per GPU. Windows with fewer than `min_samples` samples are unknown and break the streak.
+    """
+    from .gpu import TEMP
+    out = []
+    for g in store.db.execute("SELECT DISTINCT node, gpu FROM gpu_metrics WHERE metric=? ORDER BY node, gpu", (UTIL,)).fetchall():
+        for key, metric, sign in (("util", UTIL, +1), ("temp", TEMP, -1)):
+            base = [v for _, v in _series(store, g["node"], g["gpu"], metric, *baseline)]
+            if len(base) < min_base_samples:
+                continue
+            mb, sd = statistics.mean(base), max(statistics.pstdev(base), 1.0)
+            if key == "util" and mb < min_baseline_util:
+                continue
+            rows = _series(store, g["node"], g["gpu"], metric, start, end)
+            streak, t = 0, start
+            while t + window_s <= end:
+                w = [v for ts, v in rows if t <= ts < t + window_s]
+                if len(w) >= min_samples:
+                    # sign = +1 when a fall is bad (utilization), -1 when a rise is bad (temperature); z is positive in the bad direction
+                    z = sign * (mb - statistics.mean(w)) / (sd / len(w) ** 0.5)
+                    if z >= z_thr:
+                        streak += 1
+                        if streak >= sustain:
+                            out.append(ZIncident(g["node"], g["gpu"], key, t + window_s, mb, statistics.mean(w), z,
+                                                 (t - (sustain - 1) * window_s, t + window_s)))
+                            break
+                        t += window_s
+                        continue
+                streak = 0
+                t += window_s
+    return out

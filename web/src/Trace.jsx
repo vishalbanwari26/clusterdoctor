@@ -102,6 +102,9 @@ export function Report({ inv, onCite }) {
       <p className="approval">⚑ ClusterDoctor never changes anything itself. A person decides whether to act on these.</p>
 
       <div className="verify">
+        {inv.workflow?.escalated && (
+          <p className="escal">This case went to the tool-using agent ({(inv.workflow.reasons || []).join(", ").replace(/_/g, " ")}), so the steps above are its questions, not a fixed evidence pack.</p>
+        )}
         <b>Fact check:</b>{" "}
         {inv.claims_total > 0
           ? <>every claim was checked against the data. {inv.claims_unsupported_first} of {inv.claims_total} needed correcting

@@ -1,0 +1,557 @@
+{
+ "design_sha256": "9c84635ead324c91",
+ "rows": {
+  "bloat_subset_1|True": {
+   "case": "bloat_subset_1",
+   "events": true,
+   "truth": "prompt_expansion",
+   "fault": "bloat_subset",
+   "samples": [
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.004503999999999999
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.002974
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.002554
+    }
+   ]
+  },
+  "misleading_event_1|True": {
+   "case": "misleading_event_1",
+   "events": true,
+   "truth": "client_concurrency",
+   "fault": "misleading_event",
+   "samples": [
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.003718
+    },
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.007330000000000001
+    },
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.0041919999999999995
+    }
+   ]
+  },
+  "overlap_1|True": {
+   "case": "overlap_1",
+   "events": true,
+   "truth": "retry_storm",
+   "fault": "overlap",
+   "samples": [
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.018248000000000004
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.006862999999999999
+    },
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.007553000000000001
+    }
+   ]
+  },
+  "provider_slowdown_1|True": {
+   "case": "provider_slowdown_1",
+   "events": true,
+   "truth": "provider_side",
+   "fault": "provider_slowdown",
+   "samples": [
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.004311
+    },
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.004113
+    },
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.0032580000000000005
+    }
+   ]
+  },
+  "bloat_subset_1|False": {
+   "case": "bloat_subset_1",
+   "events": false,
+   "truth": "prompt_expansion",
+   "fault": "bloat_subset",
+   "samples": [
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.0026690000000000004
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.0032329999999999998
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.004358
+    }
+   ]
+  },
+  "misleading_event_1|False": {
+   "case": "misleading_event_1",
+   "events": false,
+   "truth": "client_concurrency",
+   "fault": "misleading_event",
+   "samples": [
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.004161
+    },
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.006441
+    },
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.0035519999999999996
+    }
+   ]
+  },
+  "overlap_1|False": {
+   "case": "overlap_1",
+   "events": false,
+   "truth": "retry_storm",
+   "fault": "overlap",
+   "samples": [
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.006384
+    },
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.006516
+    },
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.006507
+    }
+   ]
+  },
+  "provider_slowdown_1|False": {
+   "case": "provider_slowdown_1",
+   "events": false,
+   "truth": "provider_side",
+   "fault": "provider_slowdown",
+   "samples": [
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.004554
+    },
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.002739
+    },
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.004893000000000001
+    }
+   ]
+  },
+  "bloat_subset_2|True": {
+   "case": "bloat_subset_2",
+   "events": true,
+   "truth": "prompt_expansion",
+   "fault": "bloat_subset",
+   "samples": [
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.005299999999999999
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.005003
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.0044269999999999995
+    }
+   ]
+  },
+  "misleading_event_2|True": {
+   "case": "misleading_event_2",
+   "events": true,
+   "truth": "client_concurrency",
+   "fault": "misleading_event",
+   "samples": [
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.00526
+    },
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.003607
+    },
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.003835
+    }
+   ]
+  },
+  "overlap_2|True": {
+   "case": "overlap_2",
+   "events": true,
+   "truth": "retry_storm",
+   "fault": "overlap",
+   "samples": [
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.005718999999999999
+    },
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.008863
+    },
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.005404
+    }
+   ]
+  },
+  "provider_slowdown_2|True": {
+   "case": "provider_slowdown_2",
+   "events": true,
+   "truth": "provider_side",
+   "fault": "provider_slowdown",
+   "samples": [
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.004645
+    },
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.0051129999999999995
+    },
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.005005
+    }
+   ]
+  },
+  "bloat_subset_2|False": {
+   "case": "bloat_subset_2",
+   "events": false,
+   "truth": "prompt_expansion",
+   "fault": "bloat_subset",
+   "samples": [
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.005169
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.004632
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.00291
+    }
+   ]
+  },
+  "misleading_event_2|False": {
+   "case": "misleading_event_2",
+   "events": false,
+   "truth": "client_concurrency",
+   "fault": "misleading_event",
+   "samples": [
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.004229
+    },
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.003767
+    },
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.003872
+    }
+   ]
+  },
+  "overlap_2|False": {
+   "case": "overlap_2",
+   "events": false,
+   "truth": "retry_storm",
+   "fault": "overlap",
+   "samples": [
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.005674
+    },
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.004174
+    },
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.004243
+    }
+   ]
+  },
+  "provider_slowdown_2|False": {
+   "case": "provider_slowdown_2",
+   "events": false,
+   "truth": "provider_side",
+   "fault": "provider_slowdown",
+   "samples": [
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.004801
+    },
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.00361
+    },
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.003175
+    }
+   ]
+  },
+  "bloat_subset_3|True": {
+   "case": "bloat_subset_3",
+   "events": true,
+   "truth": "prompt_expansion",
+   "fault": "bloat_subset",
+   "samples": [
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.0032140000000000003
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.003373
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.006751
+    }
+   ]
+  },
+  "misleading_event_3|True": {
+   "case": "misleading_event_3",
+   "events": true,
+   "truth": "client_concurrency",
+   "fault": "misleading_event",
+   "samples": [
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.007223
+    },
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.006248
+    },
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.006041
+    }
+   ]
+  },
+  "overlap_3|True": {
+   "case": "overlap_3",
+   "events": true,
+   "truth": "retry_storm",
+   "fault": "overlap",
+   "samples": [
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.005611
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.006222999999999999
+    },
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.004603
+    }
+   ]
+  },
+  "provider_slowdown_3|True": {
+   "case": "provider_slowdown_3",
+   "events": true,
+   "truth": "provider_side",
+   "fault": "provider_slowdown",
+   "samples": [
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.002992
+    },
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.0047740000000000005
+    },
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.002974
+    }
+   ]
+  },
+  "bloat_subset_3|False": {
+   "case": "bloat_subset_3",
+   "events": false,
+   "truth": "prompt_expansion",
+   "fault": "bloat_subset",
+   "samples": [
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.003045
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.005105999999999999
+    },
+    {
+     "root_cause": "prompt_expansion",
+     "confidence": "high",
+     "cost": 0.002811
+    }
+   ]
+  },
+  "misleading_event_3|False": {
+   "case": "misleading_event_3",
+   "events": false,
+   "truth": "client_concurrency",
+   "fault": "misleading_event",
+   "samples": [
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.0034479999999999997
+    },
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.006109
+    },
+    {
+     "root_cause": "client_concurrency",
+     "confidence": "high",
+     "cost": 0.005523999999999999
+    }
+   ]
+  },
+  "overlap_3|False": {
+   "case": "overlap_3",
+   "events": false,
+   "truth": "retry_storm",
+   "fault": "overlap",
+   "samples": [
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.0035150000000000003
+    },
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.005345
+    },
+    {
+     "root_cause": "retry_storm",
+     "confidence": "high",
+     "cost": 0.010022
+    }
+   ]
+  },
+  "provider_slowdown_3|False": {
+   "case": "provider_slowdown_3",
+   "events": false,
+   "truth": "provider_side",
+   "fault": "provider_slowdown",
+   "samples": [
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.004141
+    },
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.00358
+    },
+    {
+     "root_cause": "provider_side",
+     "confidence": "high",
+     "cost": 0.00415
+    }
+   ]
+  }
+ }
+}

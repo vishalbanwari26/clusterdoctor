@@ -1,43 +1,42 @@
 # ClusterDoctor demo video script (target 2:50, hard limit 3:00)
 
-The video must be public on YouTube and show Token Factory and Nemotron actually being used. Record the screen at 1080p, dark mode, browser zoom 110%. Voice-over in plain sentences. Do not read the on-screen text aloud word for word.
+The video must be public on YouTube and show Token Factory and Nemotron actually being used. Record at 1080p, dark mode, browser zoom 110%. Plain sentences. Do not read the page aloud.
 
 ## Before recording
 
-- Deploy the Space and check the live button works (one real run through the hosted URL).
-- Have the Nebius Token Factory console open in a second tab, on the usage or request log page.
-- Have the Space URL open on the "Prompt bloat after a retrieval change" incident.
-- Do one live run in advance, so you know how long it takes today (stored runs took 18 to 67 s). Choose the live incident by that time.
-- Check how many live runs are left for your IP (the header shows it). You need at least one.
+- Deploy the Space and check one live run works through the hosted URL (about 15 to 30 seconds, about $0.02).
+- Have the Nebius Token Factory console open in a second tab on the usage or request log page.
+- Do one live run in advance so you know the timing today. Check how many live runs are left for your IP (shown in the header).
+- Open the incident "Prompt bloat after a retrieval change".
 
 ## Script
 
 | Time | On screen | Voice-over |
 |---|---|---|
-| 0:00 to 0:15 | Grafana-style screenshot, or the p95 chart alone, with the spike. | "When an AI service slows down, the dashboard shows a spike. It doesn't say why. Finding out takes an engineer an hour of reading metrics, logs and deploy history. I ran into this on a GPU cluster during my thesis." |
-| 0:15 to 0:35 | Dashboard, incident feed visible. Point at the two groups: real Token Factory traffic, simulated GPU fleet. | "ClusterDoctor watches telemetry and opens an incident on its own. A statistical watcher does that, no model involved. The model only runs once there is an incident. These five incidents are real calls to Nemotron on Token Factory. The GPU ones are simulated, and the page says so." |
-| 0:35 to 0:55 | Open "Prompt bloat". Show the chart: baseline line, deploy marker, latency rising. Show the four tiles. | "Here the p95 latency went from 0.47 to 0.83 seconds. Prompts grew from about 200 tokens to 55,000 after a retrieval change. That is the symptom. Now the investigation." |
-| 0:55 to 1:45 | Click **Run it live**. Confirm. The step list fills in while the timer runs. Switch to the Token Factory console tab for 3 seconds to show the requests arriving, then back. | "I'll run it live. This is Nemotron 3 Ultra on Token Factory. It picks a tool, reads the result, and decides what to check next. It compares the two time windows, reads the deploy event, and splits latency by prompt size, retries and concurrency. It has to test its top two hypotheses before it may answer. Each of these steps is a real model call." |
-| 1:45 to 2:10 | The verdict card, then the full report. Click an evidence chip so it jumps to the tool call. Show "Rejected hypotheses". | "It says prompts got much larger, and it shows why: every claim points to the tool result it came from. It also lists what it ruled out and what it is still unsure about. A second pass checks each claim against the data, and the agent has to fix any that conflict. It never changes anything. A person approves the actions." |
-| 2:10 to 2:30 | Open "Deploy event points at the wrong change". Click **Reveal the answer key**. The red mismatch chip shows. | "It does get things wrong. In this case a deploy note pointed at prompt size, and the real cause was too many concurrent requests. The agent followed the note. I left this in on purpose." |
-| 2:30 to 2:50 | One simple slide: the benchmark table (12, 15, 16, 21, 21 out of 24) and one line of text. Then the repo and Space URLs. | "On 24 hard cases, a one-shot summary got 12 right. The agent got 21 after I added stratified comparisons and claim checks. The part to be honest about: a single call given the same tables also got 21, for a sixth of the cost. What helped was the evidence, and the agent adds an audit trail. Code is MIT licensed on GitHub, and you can try it at the link." |
+| 0:00 to 0:15 | The p95 chart alone, with the spike. | "When an AI service or a GPU slows down, a dashboard shows that something is wrong. It does not say why. Working that out takes an engineer an hour of reading metrics, logs and deploy history." |
+| 0:15 to 0:35 | The incident feed: the three groups (real traffic, real GPU data, simulated). | "ClusterDoctor opens an incident on its own, with plain statistics, no model. The traffic here is real calls to Nemotron on Token Factory. Two incidents use real GPU data from a production cluster. The rest of the GPU data is simulated, and the page says so." |
+| 0:35 to 0:55 | The chart and the four tiles for prompt bloat. | "Here p95 latency rose from 0.47 to 0.83 seconds, and prompts grew from about 200 tokens to 55,000 after a retrieval change." |
+| 0:55 to 1:35 | Click **Run it live**. Steps appear while the timer runs. Cut to the Token Factory console tab for 3 seconds, then back. | "Now live. Code first collects a fixed set of evidence: the two time periods compared, any deploy, retries, and tables that change one factor while holding another fixed. Then one Nemotron 3 Ultra call writes the report, and a second call checks every claim against that evidence. Both are real calls to Token Factory." |
+| 1:35 to 2:00 | The answer card, then the full report. Click an evidence chip so it jumps to its step. Show the fact-check line. | "It says prompts got much larger, and every reason points at the evidence it came from. The check found no claim that conflicts. If it had, the model would revise, and if that failed, a tool-using agent takes over. Nothing is ever changed automatically: a person approves any action." |
+| 2:00 to 2:25 | The real-data incident (real GPU, memory error). Click **Reveal the answer key** and show the reference chip. | "This one is real GPU data, a driver memory error on a production cluster. There is no human-verified diagnosis for it, only the driver's error code, so the page shows a reference, not a right-or-wrong." |
+| 2:25 to 2:50 | One slide with the results table, then the repo and demo URLs. | "I tested whether a tool-using agent diagnoses better than one well-built call, with the tests written down first. It did not: a fair one call matched it at a tenth of the cost, which is why the one-call workflow is the default. The gains came from computing better evidence in code. Every negative result is in the repo, which is MIT licensed." |
 
 ## If a live run fails or is slow on the day
 
-- Click **Watch it work** instead. It replays a stored run step by step. Say so on camera: "this is a saved run".
-- Do not fake a live run. The Token Factory console tab only helps if the requests are real.
-- If you run out of live runs for your IP, wait for the daily reset (UTC) or run it locally with `CD_ALLOW_LIVE=1`.
+- Click **Watch it work** instead. It replays a stored run. Say so on camera: "this is a saved run".
+- Do not fake a live run. The console tab only helps if the requests are real.
+- If your IP is out of live runs, wait for the daily reset (UTC) or run locally with `CD_ALLOW_LIVE=1`.
 
 ## Shots to capture separately
 
-- The model name in the report footer (`nvidia/Nemotron-3-Ultra-550b-a55b`), for judges who skim.
+- The model name in the report footer (`nvidia/Nemotron-3-Ultra-550b-a55b`).
 - The README section "Where Nemotron and Token Factory are used".
-- The README results table.
+- The README results tables.
 
-## Cut list if you are over 3:00
+## Cut list if over 3:00
 
-1. The slide at 2:30 (keep the voice-over, show the README table instead).
-2. The Token Factory console tab switch.
-3. The "rejected hypotheses" part.
+1. The results slide (keep the voice-over, show the README table).
+2. The console tab switch.
+3. The real-data incident.
 
-Keep the live run and the wrong answer. Those are the two things a viewer will remember.
+Keep the live run and the honest result. Those are the two things a viewer will remember.

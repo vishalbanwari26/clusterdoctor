@@ -1,0 +1,334 @@
+{
+ "design_sha256": "4b9659d4debb4624",
+ "rows": [
+  {
+   "case": "bloat_subset_1",
+   "events": true,
+   "truth": "prompt_expansion",
+   "fault": "bloat_subset",
+   "first_pass": {
+    "root_cause": "prompt_expansion",
+    "confidence": "high"
+   },
+   "root_cause": "prompt_expansion",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 1,
+   "cost": 0.010527,
+   "latency_s": 12.26531195640564
+  },
+  {
+   "case": "misleading_event_1",
+   "events": true,
+   "truth": "client_concurrency",
+   "fault": "misleading_event",
+   "first_pass": {
+    "root_cause": "client_concurrency",
+    "confidence": "high"
+   },
+   "root_cause": "client_concurrency",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 2,
+   "cost": 0.031710999999999996,
+   "latency_s": 34.820152759552
+  },
+  {
+   "case": "overlap_1",
+   "events": true,
+   "truth": "retry_storm",
+   "fault": "overlap",
+   "first_pass": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "medium"
+   },
+   "root_cause": "prompt_expansion",
+   "confidence": "high",
+   "escalated": true,
+   "reasons": [
+    "abstained"
+   ],
+   "calls": 2,
+   "cost": 0.067107,
+   "latency_s": 64.82008671760559
+  },
+  {
+   "case": "provider_slowdown_1",
+   "events": true,
+   "truth": "provider_side",
+   "fault": "provider_slowdown",
+   "first_pass": {
+    "root_cause": "provider_side",
+    "confidence": "high"
+   },
+   "root_cause": "provider_side",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 1,
+   "cost": 0.011826,
+   "latency_s": 11.590415954589844
+  },
+  {
+   "case": "bloat_subset_1",
+   "events": false,
+   "truth": "prompt_expansion",
+   "fault": "bloat_subset",
+   "first_pass": {
+    "root_cause": "prompt_expansion",
+    "confidence": "high"
+   },
+   "root_cause": "prompt_expansion",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 1,
+   "cost": 0.0103,
+   "latency_s": 11.336060047149658
+  },
+  {
+   "case": "misleading_event_1",
+   "events": false,
+   "truth": "client_concurrency",
+   "fault": "misleading_event",
+   "first_pass": {
+    "root_cause": "client_concurrency",
+    "confidence": "high"
+   },
+   "root_cause": "client_concurrency",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 2,
+   "cost": 0.023686,
+   "latency_s": 29.674256086349487
+  },
+  {
+   "case": "overlap_1",
+   "events": false,
+   "truth": "retry_storm",
+   "fault": "overlap",
+   "first_pass": {
+    "root_cause": "prompt_expansion",
+    "confidence": "medium"
+   },
+   "root_cause": "retry_storm",
+   "confidence": "high",
+   "escalated": true,
+   "reasons": [
+    "claim_check_failed"
+   ],
+   "calls": 2,
+   "cost": 0.084807,
+   "latency_s": 81.69615316390991
+  },
+  {
+   "case": "provider_slowdown_1",
+   "events": false,
+   "truth": "provider_side",
+   "fault": "provider_slowdown",
+   "first_pass": {
+    "root_cause": "provider_side",
+    "confidence": "high"
+   },
+   "root_cause": "provider_side",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 1,
+   "cost": 0.010745000000000001,
+   "latency_s": 10.778667211532593
+  },
+  {
+   "case": "bloat_subset_2",
+   "events": true,
+   "truth": "prompt_expansion",
+   "fault": "bloat_subset",
+   "first_pass": {
+    "root_cause": "prompt_expansion",
+    "confidence": "high"
+   },
+   "root_cause": "prompt_expansion",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 1,
+   "cost": 0.010877000000000001,
+   "latency_s": 12.514847993850708
+  },
+  {
+   "case": "misleading_event_2",
+   "events": true,
+   "truth": "client_concurrency",
+   "fault": "misleading_event",
+   "first_pass": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "medium"
+   },
+   "root_cause": "client_concurrency",
+   "confidence": "high",
+   "escalated": true,
+   "reasons": [
+    "abstained"
+   ],
+   "calls": 3,
+   "cost": 0.132249,
+   "latency_s": 104.818030834198
+  },
+  {
+   "case": "overlap_2",
+   "events": true,
+   "truth": "retry_storm",
+   "fault": "overlap",
+   "first_pass": {
+    "root_cause": "prompt_expansion",
+    "confidence": "high"
+   },
+   "root_cause": "prompt_expansion",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 1,
+   "cost": 0.011876,
+   "latency_s": 13.200436115264893
+  },
+  {
+   "case": "provider_slowdown_2",
+   "events": true,
+   "truth": "provider_side",
+   "fault": "provider_slowdown",
+   "first_pass": {
+    "root_cause": "provider_side",
+    "confidence": "high"
+   },
+   "root_cause": "provider_side",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 1,
+   "cost": 0.009304,
+   "latency_s": 10.430997848510742
+  },
+  {
+   "case": "bloat_subset_2",
+   "events": false,
+   "truth": "prompt_expansion",
+   "fault": "bloat_subset",
+   "first_pass": {
+    "root_cause": "prompt_expansion",
+    "confidence": "high"
+   },
+   "root_cause": "prompt_expansion",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 1,
+   "cost": 0.009080999999999999,
+   "latency_s": 9.129760026931763
+  },
+  {
+   "case": "misleading_event_2",
+   "events": false,
+   "truth": "client_concurrency",
+   "fault": "misleading_event",
+   "first_pass": {
+    "root_cause": "client_concurrency",
+    "confidence": "high"
+   },
+   "root_cause": "client_concurrency",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 1,
+   "cost": 0.015981,
+   "latency_s": 17.314812898635864
+  },
+  {
+   "case": "overlap_2",
+   "events": false,
+   "truth": "retry_storm",
+   "fault": "overlap",
+   "first_pass": {
+    "root_cause": "prompt_expansion",
+    "confidence": "medium"
+   },
+   "root_cause": "prompt_expansion",
+   "confidence": "medium",
+   "escalated": false,
+   "reasons": [],
+   "calls": 2,
+   "cost": 0.022891,
+   "latency_s": 26.58296012878418
+  },
+  {
+   "case": "provider_slowdown_2",
+   "events": false,
+   "truth": "provider_side",
+   "fault": "provider_slowdown",
+   "first_pass": {
+    "root_cause": "provider_side",
+    "confidence": "high"
+   },
+   "root_cause": "provider_side",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 1,
+   "cost": 0.00878,
+   "latency_s": 9.392273187637329
+  },
+  {
+   "case": "bloat_subset_3",
+   "events": true,
+   "truth": "prompt_expansion",
+   "fault": "bloat_subset",
+   "first_pass": {
+    "root_cause": "prompt_expansion",
+    "confidence": "high"
+   },
+   "root_cause": "prompt_expansion",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 2,
+   "cost": 0.022328,
+   "latency_s": 28.308446884155273
+  },
+  {
+   "case": "misleading_event_3",
+   "events": true,
+   "truth": "client_concurrency",
+   "fault": "misleading_event",
+   "first_pass": {
+    "root_cause": "prompt_expansion",
+    "confidence": "high"
+   },
+   "root_cause": "prompt_expansion",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 2,
+   "cost": 0.023456,
+   "latency_s": 25.558557987213135
+  },
+  {
+   "case": "overlap_3",
+   "events": true,
+   "truth": "retry_storm",
+   "fault": "overlap",
+   "first_pass": {
+    "root_cause": "retry_storm",
+    "confidence": "high"
+   },
+   "root_cause": "retry_storm",
+   "confidence": "high",
+   "escalated": false,
+   "reasons": [],
+   "calls": 2,
+   "cost": 0.043282,
+   "latency_s": 49.68508195877075
+  }
+ ]
+}

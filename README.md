@@ -1,8 +1,10 @@
 # ClusterDoctor
 
-From monitoring symptoms to diagnosing root causes.
+Watchers catch the incident, code gathers the evidence, one Nemotron call writes the report, and a second call checks every claim against the evidence.
 
-ClusterDoctor watches telemetry from an AI inference app and a GPU fleet, opens an incident when something degrades, and runs an investigation: it forms competing hypotheses, queries diagnostic tools to tell them apart, and writes a report with the evidence, the rejected hypotheses and what is still uncertain. Reasoning runs on NVIDIA Nemotron through Nebius Token Factory.
+ClusterDoctor watches an AI inference app and a GPU fleet. When something degrades it builds a fixed evidence pack, has NVIDIA Nemotron on Nebius Token Factory write a report (cause, evidence, what was ruled out, what is still uncertain), and checks every factual claim in the report against the pack. A tool-using agent is called in only when that check fails or the model abstains. It never changes infrastructure; a person approves any action.
+
+**An honest headline.** I tested whether a tool-using agent diagnoses better than a single well-built call, with the designs written down before the runs. It did not. A fair one-call version matched or beat the agent in every test at about a tenth of the cost, so the one-call workflow is the default and the agent is the fallback. What did help was computing better evidence in code. Details and every negative result are below.
 
 Built for the Nebius x NVIDIA Global AI Hackathon (track: Best Apps and Agents).
 
@@ -11,28 +13,32 @@ Built for the Nebius x NVIDIA Global AI Hackathon (track: Best Apps and Agents).
 | Part | State |
 |---|---|
 | Instrumented Token Factory client, telemetry store | Done, used live |
-| Latency watcher and GPU-fleet watcher | Done, tested |
-| Investigation agent, diagnostic tools, claim verification | Done, benchmarked |
-| Benchmark harnesses and results | Done (see below) |
-| FastAPI backend and React dashboard (dark mode) | Done locally: fleet view, incident feed, investigation trace, report |
+| Watchers: latency, GPU utilization drop, z-score (utilization and temperature), Xid change | Done, tested |
+| Fixed workflow: evidence pack, strict-schema report, claim check, escalation | Done, tested, used by the dashboard and live runs |
+| Tool-using agent (the original design, now the escalation path) | Done, benchmarked |
+| Benchmarks and pre-registered tests | Done (see below) |
+| FastAPI backend and React dashboard (dark mode) | Done locally; 10 stored incidents rebuilt with the workflow |
 | Hosted demo URL, demo video | **Not done yet** |
 
 This repo is new for the hackathon. It reuses the idea of evidence-first root-cause analysis from an earlier project (Grid Co-Pilot) but shares no code with it.
 
 ## Where Nemotron and Token Factory are used
 
-- **Investigation and tool selection:** `nvidia/Nemotron-3-Ultra-550b-a55b` via Token Factory (OpenAI-compatible API, tool calling). Also used as the claim verifier and as the single-pass baseline, so comparisons isolate the investigation method.
+- **Report and claim check:** `nvidia/Nemotron-3-Ultra-550b-a55b` via Token Factory. One call writes the report under a strict JSON schema (labels and citations are enums, so neither can be free text); a second call checks each claim against the evidence pack.
+- **Escalation agent:** the same model with tool calling, only for cases the check could not settle.
 - **The application being diagnosed:** `nvidia/Nemotron-3_5-Lightning` via Token Factory. All latency, token and retry telemetry in the benchmarks comes from real calls to it.
 
 ## How it works
 
 ```
-telemetry -> watcher (statistics, no LLM) -> incident -> agent + tools -> verified report
+telemetry -> watcher (statistics) -> incident -> evidence pack (code) -> one report call -> claim check -> report
+                                                                              \-> only if abstained, low confidence or check failed: tool-using agent
 ```
 
-1. **Watchers** are plain statistics. A latency incident opens when p95 stays above 1.5x the baseline for two windows. A GPU incident opens when a GPU's utilization stays 40% below its own baseline for two windows (GPUs that were never busy are ignored).
-2. **The agent** calls read-only tools: window comparison, deploy events, latency by input size / concurrency / retries, a stratified latency grid (vary one factor while holding another fixed), and for GPUs: temperature, clocks, throttle reasons, Xid errors, host CPU, peer GPUs.
-3. **Checks on the answer.** Every cited call id must exist. A second pass checks each factual or numeric claim against the tool results, and the agent must revise claims that conflict. The agent must also test its top two hypotheses with the stratified tool before diagnosing. If no evidence survives, the answer becomes `insufficient_evidence`.
+1. **Watchers** are plain statistics: p95 above 1.5x baseline for two windows; a GPU's utilization 40% below its own baseline; a z-score watcher that catches weak but consistent shifts in utilization or temperature; and an Xid watcher that fires when the (sticky) driver error code changes.
+2. **The evidence pack** is computed in code. For inference incidents: window comparison, deploy events, retries, three stratified latency tables (change one factor, hold another fixed), and an **effect split** that says which factor explains the slowdown using only variation inside the incident window, and which factors cannot be told apart. For GPUs: window comparison, throttle and Xid state, utilization pattern, host CPU, peers, and NVIDIA's Xid catalog for the codes it covers.
+3. **One report call**, then a **claim check**: a second call tests every factual or numeric claim against the pack; one revision is allowed.
+4. **Escalation:** if the answer is `insufficient_evidence`, low confidence, still fails the check or cannot be parsed, the tool-using agent takes over.
 
 ## What is real and what is simulated
 
@@ -140,6 +146,28 @@ The pre-registered rule for claiming an edge was not met; the agent lost. What I
 
 The rule for claiming an edge on slicing was not met. The agent called `group_stats` in 3 of the 5 slot cases and still answered "isolated GPU" or abstained, so the problem is using the evidence, not having the tool. Eleven of 14 answers needed a retry for format, and it often wrote confidence as a number (0.85 to 0.95) instead of high, medium or low. Limits: one model, one prompt, one tool set; a different model or a prompt that forces slicing first might do better, and I did not test that.
 
+**Test 4, hybrid workflow** (pre-registered, `bench/results_hybrid.json`, spend $0.56, stopped by the $0.60 cap at 19 of the 24 hard Token Factory cases). A fixed evidence pack, one Ultra call that writes the report, a claim check with one revision, and escalation to the tool agent only if the answer abstained, had low confidence, still failed the claim check or could not be parsed.
+
+| Same 19 cases | Correct | Cost per case | Time |
+|---|---|---|---|
+| Hybrid | 15 / 19 | $0.030 | 30 s |
+| Stored agent (tools + claim check + stratified protocol) | 16 / 19 | $0.038 | 40 s |
+| Stored one call with the same tables | 16 / 19 | $0.006 | 6 s |
+
+Neither pre-registered success rule was met (an edge needed 23 of 24; an audit benefit needed at most 1 confident wrong answer and $0.015 per case, and the hybrid had 3 and $0.030). Escalation fired on 3 of 19 cases (15%) and 2 of those came out right. All 3 confident wrong answers were on the confounded cases, where the claim check cannot help: the claims matched the data, the reasoning blamed the most visible change. The cost I expected was wrong because an escalation pays for the one-call step, the check and then the full agent ($0.07 to $0.13). Conclusion: the evidence pack plus one call is as accurate as anything I built here, and the extra stages added cost, not accuracy.
+
+**Test 5, improving the workflow** (pre-registered; `bench/results_watchers.json`, `bench/results_evidence.json`, `bench/results_scale_scan.json`; spend $0.99 of a $1.00 cap). Tuned on dev data, then confirmed on data I had not used, except where noted.
+
+| Part | Result |
+|---|---|
+| **5a Watchers** (simulated, held-out seeds 103 and 104) | z-score watcher added to the old ones: **18/18 incidents detected, 0 false alerts**, against 12/18 before (every threshold from 3 to 10 gave 18/18, so the simulator's weak shifts are clean steps with Gaussian noise: ideal for a z-score, not a promise about real clusters) |
+| **5b Computed evidence** (effect split + strict schema, one call, 24 Token Factory cases) | **23/24 correct, 1 wrong with high confidence**, against 21/24 and 2 for the stored one call with tables. Dev 16/16 vs 14/16; the weak hold-out (repeat 3, which I had already studied) 7/8 vs 7/8, so no gain there. Two things changed at once (the evidence and the enforced schema), so I cannot say which helped |
+| **5c Calibration** (majority of 3 samples) | 23/24 (the same as one sample), **0 confident wrong answers** (the one miss had a 2-of-3 split, so its confidence dropped), $0.0148 per case |
+| **5d Fleet-scale dimension scan** | **Not completed.** On the 3,700-token prompts strict-schema decoding often degenerated into endless whitespace: 5 of 6 held-out calls were unparseable even at 2,500 tokens. My first token cap (400) was also a mistake and wasted $0.28 before I noticed. The budget ran out with one usable case per fleet (both correct), which is not a result |
+| **5e Format enforcement** | Token Factory accepts `json_schema` (strict) and forced tool calls for Nemotron 3 Ultra, and `json_schema` enforced the label set; plain `json_object` did not. Strict decoding was fine on about 1,000-token prompts (0 failures in 72 calls) and failed on about 3,700-token prompts |
+
+The 10 dashboard incidents were rebuilt with the workflow ($0.19 in total, about $0.019 each): all 10 conclude correctly and none needed escalation. That is a demonstration on cases I have studied, not a test. The earlier agent runs are kept in `data/replays_agent/`.
+
 **Test 3, real job-end windows** (31 real Kalos windows with a utilization collapse, no Xid within 30 minutes and normal temperature; the Xid is hidden; one window was excluded for missing temperature data): the label is "no fault", which is unverified. A model that names a fault is raising a false alarm.
 
 | | One-shot | Agent |
@@ -150,7 +178,7 @@ The rule for claiming an edge on slicing was not met. The agent called `group_st
 
 Every false alarm was `data_loader_bottleneck`, mostly on the same windows. Several of those windows dip only partway (for example 90% to 77%), so some may be real mild stalls and not false alarms at all.
 
-**What these tests support:** a fair one-shot call matches or beats the agent in everything I tested at these data sizes, detection is the weak link as signals get weaker, and models raise a fault on roughly a quarter of ordinary-looking collapses. They do not show whether an agent helps on larger, messier real incidents, and they are mostly simulated.
+**What these tests support:** a fair one-shot call matches or beats the agent, and a hybrid that adds a claim check and escalation, in everything I tested at these data sizes, detection is the weak link as signals get weaker, and models raise a fault on roughly a quarter of ordinary-looking collapses. They do not show whether an agent helps on larger, messier real incidents, and they are mostly simulated.
 
 ### Hidden-Xid test: can telemetry alone see a driver error? (real data, negative result)
 I streamed the whole Kalos Xid and utilization files once (1.6 GB, nothing stored) to find real events with real labels. **The dataset holds only 50 true Xid changes in 15.5 days** (35 x Xid 43, 11 x 31, 3 x 45, 1 x 94), and only 5 passed a "busy before, data after" filter. In the same file **48,811 utilization collapses** pass the same kind of filter, so a collapse that coincides with a driver error is about 4 in 48,811: almost every collapse is a normal job ending.
@@ -197,12 +225,12 @@ PYTHONPATH=src uv run python scripts/bench_eval.py
 
 ## Dashboard
 
-Eight stored incidents (5 inference with live Token Factory traffic, 3 simulated GPU) are replayed from `data/replays/` with no API spend. The page is written for someone seeing it for the first time: an intro explains what it is, each incident has a plain-words summary, the AI's answer comes first with a plain explanation of the cause, and jargon (p95, stratified, Xid) has hover definitions. Below that: what the watcher saw (latency chart or 64-GPU heatmap), the investigation as a list of questions the agent asked the data with readable result tables, and the full report with evidence, ruled-out causes and a fact-check summary. **Watch it work** replays a saved run step by step. **Run it live** asks Nemotron again. **Reveal the answer key** shows what was injected next to the diagnosis, including where the agent was wrong.
+Ten stored incidents (5 inference with live Token Factory traffic, 2 real GPU from AcmeTrace, 3 simulated GPU), each rebuilt with the fixed workflow, are replayed from `data/replays/` with no API spend. The page is written for someone seeing it for the first time: an intro explains what it is, each incident has a plain-words summary, the AI's answer comes first with a plain explanation of the cause, and jargon (p95, stratified, Xid) has hover definitions. Below that: what the watcher saw (latency chart or GPU heatmap), the evidence the code collected (or, when the agent took over, the questions it asked) with readable result tables, and the full report with evidence, ruled-out causes and a fact-check summary. **Watch it work** replays a saved run step by step. **Run it live** runs the workflow again on Token Factory (about $0.02, more if it escalates). **Reveal the answer key** shows what was injected next to the diagnosis, including where the agent was wrong.
 
 ```bash
 cd web && npm install && npm run build && cd ..          # build the UI once
 PYTHONPATH=src uv run uvicorn clusterdoctor.api:app --port 8011
-# optional: enable live runs (about $0.04 each). Needs NEBIUS_API_KEY in .env
+# optional: enable live runs (about $0.02 each, more if it escalates). Needs NEBIUS_API_KEY in .env
 CD_ALLOW_LIVE=1 PYTHONPATH=src uv run uvicorn clusterdoctor.api:app --port 8011
 ```
 
@@ -217,7 +245,7 @@ The same app runs as a Docker Space: replays are free and unlimited, and "Run li
 3. Deploy: `scripts/deploy_space.sh <hf-username>/<space-name>` (git asks for a Hugging Face write token as the password).
 4. **In the Nebius console, set a spending limit on that API key.** This is the real hard cap.
 
-Live runs are limited per visitor (default 2/day, by IP) and per day for the whole server (default 20), with at most 2 running at once; each run costs about $0.02 to $0.06 and takes about a minute. Change the limits with `CD_LIVE_PER_IP`, `CD_LIVE_DAILY_CAP` and `CD_LIVE_MAX_CONCURRENT`. The counters live in memory, so a restart resets them; that is why the key's own spending limit matters. Without the secret the Space still serves replays and the live button stays off. Free Spaces may sleep when idle, so the first visit can be slow.
+Live runs are limited per visitor (default 2/day, by IP) and per day for the whole server (default 20), with at most 2 running at once; each run costs about $0.02 to $0.13 (the high end only if it escalates to the agent) and takes 15 to 60 seconds. Change the limits with `CD_LIVE_PER_IP`, `CD_LIVE_DAILY_CAP` and `CD_LIVE_MAX_CONCURRENT`. The counters live in memory, so a restart resets them; that is why the key's own spending limit matters. Without the secret the Space still serves replays and the live button stays off. Free Spaces may sleep when idle, so the first visit can be slow.
 
 ## Demo plan (3 minutes)
 
@@ -234,6 +262,8 @@ Still to do: deploy the Space and record the video.
 
 - A 402 "exhausted your budget" error did not say whether the limit was on the key or the account, which cost time to diagnose.
 - See the Token Factory observations above.
+- **Strict-schema decoding can degenerate.** With `response_format` json_schema (strict) Nemotron 3 Ultra sometimes emitted endless whitespace right after a field name and ran to the token limit: 0 of 72 calls on about 1,000-token prompts, but 5 of 6 on about 3,700-token prompts. A token cap and a fallback to a plain-JSON retry are needed; a fix on the serving side would be better.
+- **json_object vs json_schema.** Plain `json_object` mode did not enforce an enum (the model wrote free text in a label field); `json_schema` did.
 - **Structured output compliance.** In the scale test, Nemotron 3 Ultra needed a format retry on 11 of 14 answers (free text in an enum field, missing required fields, numeric confidence where a three-value enum was specified). Enforced tool-call schemas or guided decoding on Token Factory would remove that failure mode.
 
 ## License

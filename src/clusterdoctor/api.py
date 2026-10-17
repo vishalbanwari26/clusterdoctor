@@ -99,33 +99,8 @@ def rerun(rid: str, request: Request):
 
 def _run_live(rid: str, d: dict) -> dict:
     from .agent import nemotron_chat
-    from .replay import investigation_to_dict, run_app_investigation, run_gpu_investigation
-    from .store import Request as Row, Store
-    chat, verifier = nemotron_chat(), nemotron_chat(os.environ.get("CD_VERIFIER_MODEL"))
-    tel = d["telemetry"]
-    if tel.get("real"):
-        from .real import load_event, load_slices
-        from .replay import run_real_gpu_investigation
-        store = Store(":memory:")
-        info = load_event(store, load_slices()["events"][tel["event"]])
-        inv = run_real_gpu_investigation(chat, verifier, store, info["node"], info["gpu"], tuple(tel["baseline"]),
-                                         tuple(tel["incident"]), d["summary"])
-    elif d["domain"] == "inference":
-        raw = json.loads((DATA / f"{rid}.telemetry.json").read_text())
-        store = Store(":memory:")
-        for row in raw["requests"]:
-            store.add_request(Row(**dict(zip(raw["columns"], row))))
-        for ts, kind, detail in raw["events"]:
-            store.add_event(ts, kind, detail)
-        inv = run_app_investigation(chat, verifier, store, tuple(tel["baseline"]), tuple(tel["incident"]), d["summary"])
-    else:
-        from .gpu import generate_fleet
-        store = Store(":memory:")
-        generate_fleet(store, {(n, g): s for n, g, s in tel["faults"]}, duration=tel["duration"],
-                       onset=tel["onset"], seed=tel["seed"])
-        inv = run_gpu_investigation(chat, verifier, store, tel["node"], tel["gpu"], tuple(tel["baseline"]),
-                                    tuple(tel["incident"]), d["summary"])
-    return investigation_to_dict(inv)
+    from .replay import run_live_workflow
+    return run_live_workflow(rid, d, DATA, nemotron_chat(), nemotron_chat(os.environ.get("CD_VERIFIER_MODEL")))
 
 
 if WEB.exists():

@@ -12,3 +12,4 @@ web/node_modules
 web/dist
 data/raw
 data/replays_attempts
+data/replays_agent

@@ -125,3 +125,112 @@ Spend cap $2.00; stop on the first API failure; exploratory runs, if any, are li
 ### v2 outcome (added after the run)
 Run with design hash `6a0fe958f7bd0bd0` (this file before this paragraph). Agent 1/14, one-shot 8/14; family C 0/5 vs 0/5; the rule for an edge was
 not met. Spend $1.22. The agent called `group_stats` in 3 of 5 C cases and still did not name the slot. 11 of 14 answers needed a format retry.
+
+## Test 4: hybrid (fixed workflow, agent only on escalation). Pre-registered before it runs
+
+**Question.** Does a fixed workflow with the agent kept as an escalation path do better than the one-shot with the same tables,
+and at what cost? Cap $0.60 (inside the remaining approved credits); stop on the first API failure; every case reported.
+
+**Cases.** The same 24 hard Token Factory evaluations as before (12 stored cases x deploy event present or absent), same watcher
+windows, same models (Nemotron 3 Ultra for every call).
+
+**The hybrid, in order.**
+1. **Evidence pack (code, no model):** the window comparison, the deploy events, the retry breakdown for both windows and the three
+   stratified tables (input x retries, input x concurrency, retries x concurrency), the same content the one-shot baseline with
+   tables received. Each section has an id.
+2. **One call:** Ultra reads the pack and writes the full report (label, confidence, evidence citing section ids, ruled-out causes,
+   uncertainties, actions). A bad label or no valid citation is sent back once.
+3. **Claim check:** the existing verifier checks every claim against the pack. One revision is allowed, then it is checked again.
+4. **Escalation, to the existing tool agent (strat protocol, claim check, as in the 21/24 run), if ANY of:**
+   (a) the final label is `insufficient_evidence`; (b) the final confidence is `low`; (c) the claim check still reports a
+   contradicted or unverifiable claim after the one revision; (d) the output cannot be parsed after the one retry.
+   The escalated agent's answer is the final answer. Nothing else triggers escalation.
+
+**Arms compared (stored, not re-run).** Agent with tools + claim check + stratified protocol: 21/24 correct, 2 wrong with high
+confidence, $0.0376 and 39.6 s per case. One call with the same tables: 21/24, 2 wrong@high, $0.0057 and 6.4 s. Naive one call:
+12/24, 11 wrong@high. Stored arms have run-to-run noise, so a difference of 1 case is noise.
+
+**Metrics.** Correct; wrong with high confidence; escalation rate; correct among cases that did not escalate and among those that did;
+unsupported claims in the final answer; cost and time per case (all calls included).
+
+**Decision rule, fixed now.**
+- **Edge:** hybrid correct at least 23 of 24 (2 above the best stored arm).
+- **Audit benefit at equal accuracy:** hybrid correct 21 or 22 of 24, wrong with high confidence at most 1, mean cost at most $0.015 per case.
+- **No gain:** anything else. If it is below 21 of 24 I will say it lost.
+- Whatever happens, I report the escalation rate and what the escalations did. If the cap stops the run early, I report the cases run.
+
+### Test 4 outcome (added after the run)
+Run with design hash `4b9659d4debb4624` (this file before this paragraph). The $0.60 cap stopped the run at 19 of 24 cases ($0.56). Hybrid 15/19,
+stored agent arm 16/19, stored one-shot with tables 16/19 on the same cases; 3 wrong with high confidence; mean $0.0295 and 29.7 s per case;
+escalated 3/19 (2 correct). Edge rule (23 of 24) and audit-benefit rule (at most 1 confident wrong, at most $0.015) both failed: no gain. The 5 unrun cases are not reported.
+
+## Test 5: improving the workflow (pre-registered before any of it runs)
+
+Approved: watchers (free), then computed evidence, 3-sample calibration and a format check, with dev and held-out splits. Additional credits
+cap **$1.00**, stop on any API error. Planned spend about $0.80. Earlier results stand and are not re-run; they are the comparison arms.
+Everything is reported, including no gain. Tuning happens only on the dev split; the held-out split is run once with nothing changed.
+
+**What I learned from the earlier tests that motivates this.** The gains came from computing better evidence in code (stratified tables
+12 -> 21 correct), not from the model exploring. Remaining failures: confounded changes (the model blames the most visible change),
+slicing along a dimension nobody listed, weak signals the watchers miss, and confident wrong answers.
+
+### 5a Watchers (free, simulated fleet)
+
+Add a z-score watcher to the existing util-drop and Xid watchers: per GPU, utilization drop and temperature rise measured in baseline
+standard errors, over 120 s windows, sustained for 2 windows, ignoring windows with fewer than 2 samples and GPUs with a baseline utilization below 20%.
+**Split:** tune the threshold on seeds 101 and 102 (all three levels), choosing the largest detection with zero false alerts on those fleets; then confirm
+unchanged on seeds 103 and 104. A false alert is a flagged GPU that is not one of the three faults (including the two decoys).
+**Acceptance (held-out):** at least 15 of 18 incidents detected across easy, medium and hard, and at most 1 false alert in total over the 6 held-out fleets.
+Earlier watchers on all four seeds: 24 of 36.
+
+### 5b Computed evidence for the Token Factory cases (the 24 hard evaluations)
+
+Two sections added to the evidence pack of the one-shot with tables, computed in code:
+- **Effect split:** ordinary least squares of request latency on prompt size (per 1,000 tokens), retries and concurrency, fitted **only on the incident window**,
+  and reported per factor as the slope, whether the factor varies within the window at all, and slope x (incident mean - baseline mean) as seconds of the latency rise it explains,
+  plus the unexplained remainder. A factor that does not vary inside the window is marked "not separable from the other changes in this window".
+- The prompt tells the model to prefer a factor whose variation inside the window moves latency, and to say so when nothing can be separated.
+**Split:** dev = repeats 1 and 2 of each case (16 evaluations); weak hold-out = repeat 3 (8 evaluations). I have already seen failure analyses of all three repeats,
+so the hold-out is weak, and the report says so. Run once; no changes after seeing results.
+**Arms:** the stored one call with the same tables (21 of 24, 2 wrong with high confidence, $0.0057). One new sample per case at the default temperature.
+**Success:** at least 23 of 24 correct overall. Differences of 1 case are noise.
+
+### 5c Calibration by agreement (same 24 evaluations)
+
+Two more samples of the same call (3 in total). Majority label wins; confidence is high only if all 3 agree and each said medium or high, medium if exactly 2 agree,
+and the answer becomes `insufficient_evidence` (low) if all 3 differ.
+**Success:** majority accuracy not below the single-sample accuracy, wrong with high confidence at most 1 of 24, and cost at most $0.025 per case.
+
+### 5d Computed dimension scan for the fleet-scale test (simulated, 2,048 GPUs)
+
+An automatic section in the one-shot dump: for each of node, rack and slot index, and for temperature, utilization and power, the groups whose incident mean
+deviates most from the fleet, as a deviation in group standard deviations, flagged when 4 or more. No grouping is chosen by hand.
+**Split:** dev = the existing v2 fleet and its 14 cases; held-out = a **new fleet** (new seed, a different hot slot, new placements; the same generator and families), 14 cases, generated
+before I run anything on it and run once.
+**Arms:** the stored one-shot on v2 (8 of 14 correct; 0 of 5 on slot position); the stored agent (1 of 14).
+**Success on the held-out fleet:** at least 11 of 14 correct and at least 4 of 5 on family C.
+
+### 5e Format enforcement
+
+Check, with 3 minimal calls, whether Token Factory accepts a JSON schema response format or a forced tool call for Nemotron 3 Ultra. Report yes or no.
+If yes, use it for the one-shot calls in 5b to 5d. No agent re-run (no budget).
+
+### Limits stated in advance
+Everything about fleets is simulated and the Token Factory cases are 12 recorded realizations of 4 fault types. A gain here shows the workflow handles my generators.
+It does not show a gain on real incidents.
+
+### Test 5 deviations (made before any model call on the affected parts; reasons given)
+- **5d flag statistic.** The pre-registered "flagged when z is 4 or more" used an ordinary z-score. A dry run (no model) showed that with 8 slot groups an
+  ordinary z cannot exceed about 2.5, so the flag could never fire for the slot dimension this test is about. The scan now uses a robust z (median and MAD).
+  Changed after the dry run and before any model ran on either fleet. The held-out fleet was generated before this change and was not inspected.
+- **5d speed.** Whole-fleet group means are cached per fleet (an engineering change, same numbers).
+- **Disk.** The machine's disk was 98% full during this test and generation of the held-out fleet took 24 minutes; the finished v1 scratch fleet was deleted to free space.
+- **5b/5c result already reported** under the unchanged design; hash `9c84635ead324c91`.
+- **Workflow replays** (`scripts/build_workflow_replays.py`, $0.19) were built with the same ledger; they are a demonstration, not a test.
+- **5d provider glitch.** In the first live call on the dev fleet that failed, strict-schema decoding degenerated into endless whitespace and ran to the 8,192-token limit
+  (finish_reason length; $0.03). Strict-schema calls now have a token cap and one retry. The glitched row was discarded and that case re-run
+  under the same rules as the rest. In the earlier 72 strict-schema calls of 5b and 5c there were no failures.
+- **5d token-cap error (mine).** I first set the cap to 400 tokens without testing it on one call. Nemotron 3 Ultra reasons for about 1,000 tokens before it writes the JSON, so every
+  answer was truncated, the retry failed the same way, and 15 calls ($0.28) were wasted. Those 15 rows were discarded as artifacts. The cap is now 2,500 tokens. Only $0.169 of the
+  $1.00 remained, which is not enough for both fleets, so **only the held-out fleet is run (the one the pre-registered success rule is about) and the dev fleet is reported as not run** (1 case, v00, was completed before the error).
+  The per-script cap was raised to $0.45; the global $1.00 cap is unchanged and binding.

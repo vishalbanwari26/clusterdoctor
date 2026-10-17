@@ -151,7 +151,7 @@ export default function App() {
   };
   const cite = (id) => { setActive(id); setShown(total); setTimeout(() => setActive(null), 2500); };
   const rerun = async () => {
-    if (!window.confirm("Run this investigation live on Nebius Token Factory with Nemotron?\n\nIt takes about a minute and uses a small amount of the demo's credits (limited per visitor per day).")) return;
+    if (!window.confirm("Run this investigation live on Nebius Token Factory with Nemotron?\n\nIt takes 15 to 60 seconds and uses a small amount of the demo's credits (limited per visitor per day).")) return;
     setLive({ state: "running" });
     try { const r = await getJson(`/api/incidents/${sel}/rerun`, { method: "POST" }); setLive({ state: "done", inv: r }); setShown(r.trace.length); }
     catch (e) { setLive({ state: "error", error: e.message }); }
@@ -214,7 +214,7 @@ export default function App() {
 
             <section>
               <div className="invhead">
-                <h3><span className="num">2</span> How the AI investigated</h3>
+                <h3><span className="num">2</span> How the report was built</h3>
                 <div className="actions">
                   <button onClick={replay} disabled={!inv || live?.state === "running"}>▶ Watch it work</button>
                   <button onClick={rerun} disabled={!liveOn || live?.state === "running"} title={liveOn ? "Asks Nemotron again right now" : liveWhy}>
@@ -224,8 +224,8 @@ export default function App() {
                 </div>
               </div>
               <p className="help">
-                Each step is a question the AI asked the data. <b>Watch it work</b> replays the saved run step by step.
-                <b> Run it live</b> asks Nemotron again right now (about a minute). <b>Reveal the answer key</b> shows what was really injected, so you can judge the AI.
+                Each step is evidence the code collected before the AI wrote the report (if the check fails, a tool-using agent takes over and each step is a question it asked). <b>Watch it work</b> replays the saved run step by step.
+                <b> Run it live</b> asks Nemotron again right now (15 to 60 seconds). <b>Reveal the answer key</b> shows what was really injected, so you can judge the AI.
               </p>
               {live?.state === "running" && (
                 <div className="running" role="status" aria-live="polite">
