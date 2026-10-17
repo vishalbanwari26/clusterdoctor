@@ -14,7 +14,7 @@ Built for the Nebius x NVIDIA Global AI Hackathon (track: Best Apps and Agents).
 | Latency watcher and GPU-fleet watcher | Done, tested |
 | Investigation agent, diagnostic tools, claim verification | Done, benchmarked |
 | Benchmark harnesses and results | Done (see below) |
-| API server and React dashboard | **Not built yet** |
+| FastAPI backend and React dashboard (dark mode) | Done locally: fleet view, incident feed, investigation trace, report |
 | Hosted demo URL, demo video | **Not done yet** |
 
 This repo is new for the hackathon. It reuses the idea of evidence-first root-cause analysis from an earlier project (Grid Co-Pilot) but shares no code with it.
@@ -114,6 +114,19 @@ PYTHONPATH=src uv run python scripts/bench_eval.py
 
 `bench/manifest.json` points to case databases that are not committed; regenerate them with `bench_generate.py`.
 
+## Dashboard
+
+Eight stored incidents (5 inference with live Token Factory traffic, 3 simulated GPU) are replayed from `data/replays/` with no API spend. Each shows what the watcher saw (latency chart or 64-GPU heatmap), the investigation step by step, and the report with evidence citations, rejected hypotheses and the check results. "Reveal injected fault" shows the ground truth next to the diagnosis, including where the agent was wrong. "Run live" re-runs an investigation on Token Factory and is off unless enabled:
+
+```bash
+cd web && npm install && npm run build && cd ..          # build the UI once
+PYTHONPATH=src uv run uvicorn clusterdoctor.api:app --port 8011
+# optional, spends credits (about $0.04 per run), capped per server start:
+CD_ALLOW_LIVE=1 CD_LIVE_CAP=5 PYTHONPATH=src uv run uvicorn clusterdoctor.api:app --port 8011
+```
+
+To rebuild the replays: generate cases with `bench_generate.py`, then `scripts/build_replays.py` (`--dry` skips the model calls).
+
 ## Demo plan (3 minutes)
 
 1. A fleet view looks healthy; an AI app is running against Token Factory.
@@ -123,7 +136,7 @@ PYTHONPATH=src uv run python scripts/bench_eval.py
 5. A simulated GPU node shows the same symptom (low utilization) with a different cause and a different diagnosis.
 6. The results slide, including the single-call baseline that ties the agent, and why that matters.
 
-Still to build for this: the API server, the dashboard (fleet view, incident feed, investigation trace), and hosting.
+Still to do: hosting and the video.
 
 ## Feedback for Nebius
 
