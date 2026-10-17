@@ -1,0 +1,104 @@
+[
+  {
+    "event": "A",
+    "rep": 1,
+    "baseline": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "medium",
+      "reasoning": "Xid 94 (ROBUST_CHANNEL_CONTAINED_ERROR) signals a contained GPU memory error, often due to ECC memory faults. The flagged GPU's utilization, temperature, and power all dropped sharply, and all peer GPUs show similarly low utilization, indicating the workload terminated after the hardware error on GPU 3.",
+      "latency_s": 2.7168760299682617,
+      "prompt_tokens": 974,
+      "completion_tokens": 681,
+      "cost_usd": 0.0030169999999999997
+    },
+    "agent": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "medium"
+    }
+  },
+  {
+    "event": "A",
+    "rep": 2,
+    "baseline": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "medium",
+      "reasoning": "Xid 94 (ROBUST_CHANNEL_CONTAINED_ERROR) indicates a contained GPU memory error (possible ECC error) on GPU 3. This error requires the affected application to restart, explaining the simultaneous utilization drop across all 8 GPUs (from ~96% to ~27%) and corresponding temperature/power reductions. No thermal throttling (temps fell), and data loader bottleneck is unlikely given the specific Xid 94 t",
+      "latency_s": 3.3515379428863525,
+      "prompt_tokens": 974,
+      "completion_tokens": 995,
+      "cost_usd": 0.003959
+    },
+    "agent": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "medium"
+    }
+  },
+  {
+    "event": "A",
+    "rep": 3,
+    "baseline": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "medium",
+      "reasoning": "XID 94 (ROBUST_CHANNEL_CONTAINED_ERROR) indicates a contained memory error on GPU 3, with ECC memory error handling as a known cause; the synchronous utilization drop across all 8 peer GPUs (all ~27%) suggests the distributed workload stalled due to this GPU's fault; temperature and power decreased, ruling out thermal throttling.",
+      "latency_s": 7.70845627784729,
+      "prompt_tokens": 974,
+      "completion_tokens": 2515,
+      "cost_usd": 0.008518999999999999
+    },
+    "agent": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "medium"
+    }
+  },
+  {
+    "event": "B",
+    "rep": 1,
+    "baseline": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "high",
+      "reasoning": "Xid 94 (ROBUST_CHANNEL_CONTAINED_ERROR) indicates a contained GPU memory/ECC error requiring application restart. GPU 6 shows normal temperature (50.5\u00b0C, lower than peers), stable high utilization (98.6% \u00b10.7%), and is the only flagged GPU among 8 peers with similar load/temps. No thermal throttling or data-loader signs; the Xid points directly to hardware memory fault.",
+      "latency_s": 1.970383882522583,
+      "prompt_tokens": 906,
+      "completion_tokens": 478,
+      "cost_usd": 0.00234
+    },
+    "agent": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "medium"
+    }
+  },
+  {
+    "event": "B",
+    "rep": 2,
+    "baseline": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "medium",
+      "reasoning": "Xid 94 (ROBUST_CHANNEL_CONTAINED_ERROR) indicates a contained memory error, often due to ECC memory fault. GPU 6 shows high utilization (98.6%) and normal temperature (50.5\u00b0C) during incident, with no thermal throttling evidence. Peer GPUs exhibit similar high utilization, ruling out data loader bottleneck. The error is hardware-related memory error.",
+      "latency_s": 1.9566011428833008,
+      "prompt_tokens": 906,
+      "completion_tokens": 467,
+      "cost_usd": 0.002307
+    },
+    "agent": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "medium"
+    }
+  },
+  {
+    "event": "B",
+    "rep": 3,
+    "baseline": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "medium",
+      "reasoning": "Xid 94 (ROBUST_CHANNEL_CONTAINED_ERROR) indicates a contained memory error, typically ECC memory error handling, which is a GPU hardware fault. Incident GPU shows normal temperature (50.5\u00b0C) and high utilization (98.6%) like peers, ruling out thermal throttling and data loader bottleneck. Baseline utilization missing, but Xid 94 is a strong hardware fault indicator.",
+      "latency_s": 1.707275152206421,
+      "prompt_tokens": 906,
+      "completion_tokens": 391,
+      "cost_usd": 0.002079
+    },
+    "agent": {
+      "root_cause": "gpu_hardware_fault",
+      "confidence": "medium"
+    }
+  }
+]

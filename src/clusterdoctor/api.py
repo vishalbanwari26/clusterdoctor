@@ -27,7 +27,7 @@ guard = LiveGuard(daily_cap=int(os.environ.get("CD_LIVE_DAILY_CAP", "20")),
 
 
 ORDER = ["prompt-bloat", "retry-storm", "overlap", "misleading-event", "provider-slowdown",
-         "gpu-thermal", "gpu-loader", "gpu-hardware"]   # real-traffic inference incidents first
+         "real-xid94-a", "real-xid94-b", "gpu-thermal", "gpu-loader", "gpu-hardware"]   # real data before simulated
 
 
 def _ids() -> list[str]:
@@ -58,7 +58,8 @@ def incidents():
         d = _load(rid)
         inv = d.get("investigation") or {}
         diag = inv.get("diagnosis") or {}
-        out.append({"id": rid, "title": d["title"], "domain": d["domain"], "summary": d["summary"],
+        group = d.get("group") or ("Simulated GPU fleet" if d["domain"] == "gpu" else "Real traffic to Token Factory")
+        out.append({"id": rid, "title": d["title"], "domain": d["domain"], "group": group, "summary": d["summary"],
                     "source": d["source"], "root_cause": diag.get("root_cause"), "confidence": diag.get("confidence")})
     return out
 
@@ -102,7 +103,14 @@ def _run_live(rid: str, d: dict) -> dict:
     from .store import Request as Row, Store
     chat, verifier = nemotron_chat(), nemotron_chat(os.environ.get("CD_VERIFIER_MODEL"))
     tel = d["telemetry"]
-    if d["domain"] == "inference":
+    if tel.get("real"):
+        from .real import load_event, load_slices
+        from .replay import run_real_gpu_investigation
+        store = Store(":memory:")
+        info = load_event(store, load_slices()["events"][tel["event"]])
+        inv = run_real_gpu_investigation(chat, verifier, store, info["node"], info["gpu"], tuple(tel["baseline"]),
+                                         tuple(tel["incident"]), d["summary"])
+    elif d["domain"] == "inference":
         raw = json.loads((DATA / f"{rid}.telemetry.json").read_text())
         store = Store(":memory:")
         for row in raw["requests"]:

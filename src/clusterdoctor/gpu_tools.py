@@ -22,6 +22,25 @@ Finish by calling submit_diagnosis, citing the call_id (like call_1) of the tool
 supports each claim. The data may be simulated; say what you can and cannot conclude from it."""
 
 
+# Entries read from NVIDIA's Xid catalog (https://docs.nvidia.com/deploy/xid-errors/analyzing-xid-catalog.html).
+# Only these four were verified. Anything else is reported as unknown rather than guessed.
+XID_CATALOG = {
+    31: {"name": "ROBUST_CHANNEL_FIFO_ERROR_MMU_ERR_FLT", "description": "GPU memory page fault",
+         "meaning": "Logged when the MMU reports a fault. Typically an application-level bug, possibly a driver or hardware bug.",
+         "action": "Restart the application. If it repeats on the same GPU, run hardware diagnostics; on different GPUs, check the application."},
+    43: {"name": "ROBUST_CHANNEL_RESETCHANNEL_VERIF_ERROR", "description": "GPU stopped processing",
+         "meaning": "Logged when a user application hits a software-induced fault and must terminate. The GPU itself stays healthy.",
+         "action": "Ignore on the GPU side; usually a user application error."},
+    45: {"name": "ROBUST_CHANNEL_PREEMPTIVE_REMOVAL", "description": "Preemptive cleanup, due to previous errors",
+         "meaning": "Logged when the application aborts (examples: Ctrl-C, GPU reset, SIGKILL). Often follows an earlier error such as a double-bit error.",
+         "action": "On its own, restart the fabric manager; alongside another Xid, follow that Xid."},
+    94: {"name": "ROBUST_CHANNEL_CONTAINED_ERROR", "description": "Contained memory error",
+         "meaning": "Logged when the driver handles an error on a GPU that supports error containment. The error is contained to one "
+                    "application, which must restart. Xid 45 is expected alongside it. One possible cause is ECC memory error handling.",
+         "action": "Restart the affected application."},
+}
+
+
 class GpuTools:
     def __init__(self, store: Store, node: str, gpu: int,
                  baseline: tuple[float, float], incident: tuple[float, float]):
@@ -70,6 +89,14 @@ class GpuTools:
         """Mean host CPU utilization for the node (data loading runs on the CPU)."""
         return {"host_cpu_util_pct": self._mean(CPU_UTIL, window)}
 
+    def xid_lookup(self, code: int) -> dict:
+        """What an Xid code means, from NVIDIA's Xid catalog (only a few codes are included)."""
+        entry = XID_CATALOG.get(int(code))
+        if entry is None:
+            return {"code": int(code), "known": False,
+                    "note": "Not in the local catalog (only 31, 43, 45 and 94 are included). Do not guess its meaning."}
+        return {"code": int(code), "known": True, **entry, "source": "NVIDIA Xid catalog"}
+
     def peer_gpus(self) -> list[dict]:
         """Same-node GPUs over the incident window: is the problem isolated to one GPU or node-wide?"""
         gpus = [r["gpu"] for r in self.store.db.execute(
@@ -79,7 +106,8 @@ class GpuTools:
 
     def registry(self) -> dict[str, Callable]:
         return {"compare_windows": self.compare_windows, "throttle_reasons": self.throttle_reasons,
-                "util_pattern": self.util_pattern, "host_cpu": self.host_cpu, "peer_gpus": self.peer_gpus}
+                "util_pattern": self.util_pattern, "host_cpu": self.host_cpu, "peer_gpus": self.peer_gpus,
+                "xid_lookup": self.xid_lookup}
 
 
 def _spec(name, desc, params):
@@ -97,3 +125,20 @@ GPU_TOOL_SPECS = [
     _spec("peer_gpus", "Other GPUs on the same node during the incident, to check if the problem is isolated.", NO_ARGS),
     _submit,
 ]
+
+
+# ---- real-data variant: same tools plus the Xid catalog, and a prompt that says the data is real ----
+REAL_TOOL_SPECS = [*GPU_TOOL_SPECS[:-1],
+                   _spec("xid_lookup", "Explains an NVIDIA Xid error code using NVIDIA's catalog (a few codes only).",
+                         {"type": "object", "properties": {"code": {"type": "integer"}}, "required": ["code"]}),
+                   GPU_TOOL_SPECS[-1]]
+
+REAL_SYSTEM = GPU_SYSTEM.replace(
+    "A monitor flagged one GPU for low utilization.",
+    "A monitor flagged one GPU, either for low utilization or because the driver reported an Xid error. "
+    "The incident text says which.").replace(
+    "The data may be simulated; say what you can and cannot conclude from it.",
+    "This is REAL telemetry from a production GPU cluster, sampled every 15 s. It has utilization, temperature, power and "
+    "the driver's Xid error code. It has NO clock, throttle-reason or host-CPU data, and some samples are missing: when a "
+    "tool returns no data, say so instead of assuming. Use xid_lookup to interpret any Xid code, and only rely on what the "
+    "catalog returns. The Xid field keeps the last code, so a change is an event. Say what you can and cannot conclude.")

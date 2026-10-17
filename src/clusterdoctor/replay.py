@@ -40,3 +40,13 @@ def investigation_to_dict(inv: Investigation) -> dict:
         "wall_s": round(getattr(inv, "wall_s", 0.0), 1),
         "model": os.environ.get("CD_AGENT_MODEL", "nvidia/Nemotron-3-Ultra-550b-a55b"),
     }
+
+
+def run_real_gpu_investigation(chat, verifier, store, node, gpu, baseline, incident, summary, max_steps: int = 16) -> Investigation:
+    """Same pipeline as the simulated GPU runs, with the Xid catalog tool and a prompt that says the data is real."""
+    from .gpu_tools import REAL_SYSTEM, REAL_TOOL_SPECS
+    t = time.time()
+    inv = investigate(chat, GpuTools(store, node, gpu, baseline, incident), summary + " (REAL telemetry, AcmeTrace Kalos)",
+                      specs=REAL_TOOL_SPECS, system=REAL_SYSTEM, verifier=verifier, max_steps=max_steps)
+    inv.wall_s = time.time() - t  # type: ignore[attr-defined]
+    return inv

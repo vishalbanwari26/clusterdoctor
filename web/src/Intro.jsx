@@ -19,8 +19,10 @@ export default function Intro({ onClose }) {
         <li><b>Read the diagnosis</b>, then click <i>Reveal the answer key</i> to see what was really wrong.</li>
       </ol>
       <p className="note">
-        These are saved runs of real investigations, so viewing them costs nothing. The five &ldquo;Real traffic&rdquo; incidents
-        come from live calls to Token Factory. The GPU incidents use a <b>simulated</b> fleet, because there is no real GPU behind this demo.
+        These are saved runs of real investigations, so viewing them costs nothing. The &ldquo;Real traffic&rdquo; incidents
+        come from live calls to Token Factory. The &ldquo;Real GPU data&rdquo; incidents use telemetry recorded on a production GPU cluster
+        (AcmeTrace, CC-BY-4.0); no one verified a diagnosis for them, so they come with a reference label, not an answer key. The &ldquo;Simulated&rdquo;
+        GPU incidents are generated, because there is no GPU behind this demo.
       </p>
     </section>
   );

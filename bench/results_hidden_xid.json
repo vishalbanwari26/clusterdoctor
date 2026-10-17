@@ -1,0 +1,402 @@
+{
+ "w00": {
+  "kind": "P_collapse",
+  "truth_driver_error": true,
+  "xid_code": 43,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "reasoning": "All 8 GPUs on the machine show nearly identical utilization drops (24-27%) and temperature drops (31-36\u00b0C) during the incident window, indicating a coordinated system-wide workload change (job completion/cancellation) rather than an isolated GPU driver error. The flagged GPU (5) behaves identically ",
+   "latency_s": 2.6449620723724365,
+   "prompt_tokens": 711,
+   "completion_tokens": 757,
+   "cost_usd": 0.0029820000000000003
+  },
+  "agent": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "high",
+   "tool_calls": 4,
+   "cost_usd": 0.012392
+  }
+ },
+ "w01": {
+  "kind": "P_collapse",
+  "truth_driver_error": true,
+  "xid_code": 43,
+  "baseline": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "medium",
+   "reasoning": "Flagged GPU dropped from steady 100% baseline to variable 0-100% (mean 75.7%, stdev 41.1) with temp/power drops consistent with reduced load. However, utilization recovers to 100% within incident window (max 100%), and peer GPU 0 also shows reduced utilization (68%), suggesting workload change acros",
+   "latency_s": 3.8200738430023193,
+   "prompt_tokens": 712,
+   "completion_tokens": 1182,
+   "cost_usd": 0.0042580000000000005
+  },
+  "agent": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "high",
+   "tool_calls": 4,
+   "cost_usd": 0.008712999999999999
+  }
+ },
+ "w02": {
+  "kind": "P_collapse",
+  "truth_driver_error": true,
+  "xid_code": 94,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "reasoning": "All 8 GPUs on the machine show a simultaneous drop in utilization from ~100% to ~25% with similar temperatures, indicating a workload change (job completion/cancellation) affecting the entire node, not an isolated GPU driver error. The flagged GPU's metrics are consistent with its peers.",
+   "latency_s": 2.7885582447052,
+   "prompt_tokens": 711,
+   "completion_tokens": 796,
+   "cost_usd": 0.003099
+  },
+  "agent": {
+   "root_cause": "no_driver_error",
+   "confidence": "medium",
+   "tool_calls": 4,
+   "cost_usd": 0.013363
+  }
+ },
+ "w03": {
+  "kind": "P_silent",
+  "truth_driver_error": true,
+  "xid_code": 43,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "medium",
+   "reasoning": "The flagged GPU (GPU 2) maintained 99.6% mean utilization during the incident window with 0% samples below 50%, temperature stable at ~58\u00b0C, and power steady at ~363W. No utilization collapse, temperature drop, or power disruption occurred\u2014telemetry signatures typically seen with Xid-triggered GPU r",
+   "latency_s": 3.0537538528442383,
+   "prompt_tokens": 710,
+   "completion_tokens": 830,
+   "cost_usd": 0.0032
+  },
+  "agent": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "medium",
+   "tool_calls": 4,
+   "cost_usd": 0.008584
+  }
+ },
+ "w04": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "reasoning": "All GPUs on the machine show a correlated drop in utilization (36-42%) and temperature during the incident window, indicating a workload-wide event (job completion/cancellation) rather than an isolated driver error on GPU 3. The flagged GPU still exhibits variable utilization up to 100%, inconsisten",
+   "latency_s": 3.53853702545166,
+   "prompt_tokens": 614,
+   "completion_tokens": 1090,
+   "cost_usd": 0.0038840000000000003
+  },
+  "agent": {
+   "root_cause": "no_driver_error",
+   "confidence": "medium",
+   "tool_calls": 3,
+   "cost_usd": 0.009254
+  }
+ },
+ "w05": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "medium",
+   "reasoning": "The flagged GPU's incident-window utilization (48.2% mean, 44.9% stdev, 47% samples <50%) and power drop (227.5W\u2192167.8W) match the peer GPUs on the same machine, which all show ~46-55% utilization during the incident. This machine-wide utilization collapse indicates a workload shift (job completion/",
+   "latency_s": 4.088932752609253,
+   "prompt_tokens": 678,
+   "completion_tokens": 1259,
+   "cost_usd": 0.004455
+  },
+  "agent": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "high",
+   "tool_calls": 3,
+   "cost_usd": 0.008355000000000001
+  }
+ },
+ "w06": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "medium",
+   "reasoning": "Flagged GPU shows increased utilization variance (stdev 26% vs 2.5%) and minimum 0% during incident, but mean utilization remains high (91%) and peer GPUs exhibit similar average utilization. Temperature and power drops are consistent with lower load. No telemetry signatures (e.g., thermal throttlin",
+   "latency_s": 4.4694132804870605,
+   "prompt_tokens": 711,
+   "completion_tokens": 1366,
+   "cost_usd": 0.004809
+  },
+  "agent": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "low",
+   "tool_calls": 3,
+   "cost_usd": 0.009451000000000001
+  }
+ },
+ "w07": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "medium",
+   "reasoning": "Flagged GPU shows high utilization variance (stdev 34.5, min 0%, 14% samples <50%) with drops to idle, while peer GPUs maintain stable reduced utilization (82-91%) at lower temperatures (47-53C vs 59.3C). This pattern is consistent with GPU resets potentially from Xid errors, but utilization collaps",
+   "latency_s": 4.792052984237671,
+   "prompt_tokens": 711,
+   "completion_tokens": 1266,
+   "cost_usd": 0.004509
+  },
+  "agent": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "high",
+   "tool_calls": 3,
+   "cost_usd": 0.009787
+  }
+ },
+ "w08": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "reasoning": "All 8 GPUs on the machine show a coordinated drop in utilization (52-60%) and temperature (43-47\u00b0C) during the incident window, inconsistent with an isolated driver error on GPU 2. The pattern indicates a workload change (job completion/cancellation) affecting the entire node.",
+   "latency_s": 2.363760232925415,
+   "prompt_tokens": 711,
+   "completion_tokens": 564,
+   "cost_usd": 0.002403
+  },
+  "agent": {
+   "root_cause": "no_driver_error",
+   "confidence": "medium",
+   "tool_calls": 4,
+   "cost_usd": 0.007209
+  }
+ },
+ "w09": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "reasoning": "All 8 GPUs on the machine show nearly identical utilization collapse (22-29%) and temperature drop (33-38\u00b0C) during the incident window, indicating a coordinated workload termination (job completion/cancellation/scheduler action) rather than an isolated driver error on GPU 2. Xid errors typically af",
+   "latency_s": 1.9674689769744873,
+   "prompt_tokens": 711,
+   "completion_tokens": 499,
+   "cost_usd": 0.002208
+  },
+  "agent": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "tool_calls": 4,
+   "cost_usd": 0.009083
+  }
+ },
+ "w10": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "reasoning": "All 8 GPUs on the machine show a simultaneous, near-identical collapse in utilization (~94% to ~26%), temperature, and power at the incident window. This system-wide pattern indicates a coordinated workload termination (job completion, cancellation, or scheduler preemption) rather than an isolated G",
+   "latency_s": 2.3635101318359375,
+   "prompt_tokens": 711,
+   "completion_tokens": 581,
+   "cost_usd": 0.0024540000000000005
+  },
+  "agent": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "tool_calls": 3,
+   "cost_usd": 0.007301
+  }
+ },
+ "w11": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "reasoning": "All 8 GPUs on the machine show nearly identical utilization drops during the incident window (76-81% vs ~96% baseline), indicating a machine-wide workload change (job completion/cancellation/scaling) rather than an isolated GPU driver error. The flagged GPU's temperature is stable (41.1\u00b0C vs 41.4\u00b0C ",
+   "latency_s": 3.0972909927368164,
+   "prompt_tokens": 711,
+   "completion_tokens": 916,
+   "cost_usd": 0.0034590000000000003
+  },
+  "agent": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "tool_calls": 4,
+   "cost_usd": 0.013624
+  }
+ },
+ "w12": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "medium",
+   "reasoning": "All 8 GPUs on the machine show a simultaneous drop in utilization (from ~100% to ~80-83%), temperature, and power during the incident window, consistent with a system-wide workload reduction (e.g., job completion or cancellation) rather than an isolated NVIDIA driver error on the flagged GPU.",
+   "latency_s": 4.145647764205933,
+   "prompt_tokens": 710,
+   "completion_tokens": 1303,
+   "cost_usd": 0.004618999999999999
+  },
+  "agent": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "medium",
+   "tool_calls": 3,
+   "cost_usd": 0.009114
+  }
+ },
+ "w13": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "reasoning": "All 8 GPUs on the machine show a synchronized utilization collapse from ~99.8% to ~26.1% with nearly identical values (26.1-26.2%) during the incident window. The flagged GPU's temperature (37.5\u00b0C) and utilization pattern are indistinguishable from peers. This system-wide, coordinated drop indicates",
+   "latency_s": 2.7663371562957764,
+   "prompt_tokens": 711,
+   "completion_tokens": 777,
+   "cost_usd": 0.0030420000000000004
+  },
+  "agent": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "tool_calls": 4,
+   "cost_usd": 0.006639
+  }
+ },
+ "w14": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "reasoning": "All 8 GPUs on the machine show simultaneous utilization collapse (21-36% during incident vs ~96% baseline) with corresponding temperature and power drops, indicating a coordinated workload termination or scheduler action affecting the entire node, not an isolated GPU driver error. Xid errors are per",
+   "latency_s": 2.3279318809509277,
+   "prompt_tokens": 712,
+   "completion_tokens": 555,
+   "cost_usd": 0.002377
+  },
+  "agent": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "tool_calls": 3,
+   "cost_usd": 0.009092
+  }
+ },
+ "w15": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "medium",
+   "reasoning": "GPU 0 shows increased utilization variability (stdev 10.9%\u219223.9%) and 10% of samples below 50% with min 0%, but mean utilization remains high (83.6%). Peers are stable at similar utilization. No sustained collapse, no thermal/power anomaly, and no raw time series to detect a sudden drop/recovery at ",
+   "latency_s": 3.0516178607940674,
+   "prompt_tokens": 711,
+   "completion_tokens": 912,
+   "cost_usd": 0.0034470000000000004
+  },
+  "agent": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "medium",
+   "tool_calls": 4,
+   "cost_usd": 0.008108
+  }
+ },
+ "w16": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "reasoning": "All 8 GPUs on the machine show nearly identical utilization (~25-30%) and temperature (~28-31\u00b0C) drops during the incident window, compared to baseline ~96% util and 41\u00b0C. The flagged GPU's metrics are indistinguishable from its peers, indicating a coordinated workload change (job completion/cancell",
+   "latency_s": 2.408067226409912,
+   "prompt_tokens": 713,
+   "completion_tokens": 645,
+   "cost_usd": 0.0026479999999999997
+  },
+  "agent": {
+   "root_cause": "insufficient_evidence",
+   "confidence": "medium",
+   "tool_calls": 4,
+   "cost_usd": 0.01086
+  }
+ },
+ "w17": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "reasoning": "All 8 GPUs on the machine show a simultaneous, near-identical drop in utilization (16-26%), temperature (~30\u00b0C), and power during the incident window. The flagged GPU's telemetry is indistinguishable from its peers. This system-wide correlation indicates a common cause such as job completion, cancel",
+   "latency_s": 2.6461710929870605,
+   "prompt_tokens": 711,
+   "completion_tokens": 697,
+   "cost_usd": 0.002802
+  },
+  "agent": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "tool_calls": 4,
+   "cost_usd": 0.011021
+  }
+ },
+ "w18": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "medium",
+   "reasoning": "All 8 GPUs on the machine show a synchronized utilization collapse (18-23% mean), with proportional temperature and power drops. The flagged GPU's behavior is indistinguishable from its peers. This machine-wide, coordinated pattern is consistent with workload completion/cancellation or scheduler act",
+   "latency_s": 2.8494961261749268,
+   "prompt_tokens": 711,
+   "completion_tokens": 889,
+   "cost_usd": 0.003378
+  },
+  "agent": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "tool_calls": 3,
+   "cost_usd": 0.008938
+  }
+ },
+ "w19": {
+  "kind": "N_collapse",
+  "truth_driver_error": false,
+  "xid_code": null,
+  "baseline": {
+   "root_cause": "no_driver_error",
+   "confidence": "medium",
+   "reasoning": "All 8 GPUs on the machine show coordinated utilization drop to 40-58% range during incident window, with proportional temperature/power reductions. Flagged GPU (7) behaves identically to peers. System-wide workload transition (job end/cancellation) explains the telemetry; no isolated GPU failure sig",
+   "latency_s": 2.5075740814208984,
+   "prompt_tokens": 710,
+   "completion_tokens": 643,
+   "cost_usd": 0.0026390000000000003
+  },
+  "agent": {
+   "root_cause": "no_driver_error",
+   "confidence": "high",
+   "tool_calls": 3,
+   "cost_usd": 0.008711
+  }
+ }
+}

@@ -41,13 +41,15 @@ export function Verdict({ inv, truth }) {
       <div className="vmain">
         <span className={"cause" + (d.root_cause === "insufficient_evidence" ? " abstain" : "")}>{causeLabel(d.root_cause)}</span>
         <Confidence level={d.confidence} />
-        {truth && (
+        {truth && truth.real && <span className="truthchip ref">Reference: {truth.fault}</span>}
+        {truth && !truth.real && (
           <span className={"truthchip " + (truth.root_cause === d.root_cause ? "match" : "miss")}>
             {truth.root_cause === d.root_cause ? "✔ Matches what was injected" : "✖ Wrong. What was injected: " + causeLabel(truth.root_cause)}
           </span>
         )}
       </div>
       <p className="vplain">{causePlain(d.root_cause)}</p>
+      {truth && truth.real && <p className="vnote">{truth.note} It comes from the same Xid signal the agent saw, so agreement with it is not independent proof.</p>}
       {top.length > 0 && (<>
         <div className="vkicker">Main reasons</div>
         <ul className="vwhy">{top.map((e, i) => <li key={i}>{shorten(e.claim)}</li>)}</ul>

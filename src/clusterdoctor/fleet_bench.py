@@ -40,7 +40,8 @@ def fleet_dump(store: Store, node: str, gpu: int, baseline: tuple[float, float],
     for r in store.db.execute("SELECT node, AVG(value) m FROM gpu_metrics WHERE metric=? AND ts>=? AND ts<? "
                               "AND gpu=0 GROUP BY node", (CPU_UTIL, *incident)):
         host[r["node"]] = round(r["m"])
-    series = [{"t": round(r["ts"] - incident[0]), "util": round(r["u"]), "temp": round(r["tp"]), "clock": round(r["c"])}
+    rnd = lambda v: None if v is None else round(v)  # noqa: E731  (missing samples are legitimate)
+    series = [{"t": round(r["ts"] - incident[0]), "util": rnd(r["u"]), "temp": rnd(r["tp"]), "clock": rnd(r["c"])}
               for r in store.db.execute(
                   """SELECT ts, MAX(CASE WHEN metric=? THEN value END) u, MAX(CASE WHEN metric=? THEN value END) tp,
                             MAX(CASE WHEN metric=? THEN value END) c FROM gpu_metrics

@@ -33,7 +33,7 @@ def export_requests(store: Store, t0: float, t2: float) -> dict:
 
 
 def fleet_chart(store: Store, node: str, gpu: int, baseline: tuple[float, float], incident: tuple[float, float],
-                onset: float, duration: float) -> dict:
+                onset: float, duration: float, simulated: bool = True) -> dict:
     cells = {}
     for key, (a, b) in (("util_base", baseline), ("util_inc", incident)):
         for r in store.db.execute("SELECT node, gpu, AVG(value) m FROM gpu_metrics WHERE metric=? AND ts>=? AND ts<? "
@@ -41,15 +41,16 @@ def fleet_chart(store: Store, node: str, gpu: int, baseline: tuple[float, float]
             cells.setdefault((r["node"], r["gpu"]), {})[key] = round(r["m"])
     for r in store.db.execute("SELECT node, gpu, AVG(value) m FROM gpu_metrics WHERE metric=? AND ts>=? AND ts<? "
                               "GROUP BY node, gpu", (TEMP, *incident)):
-        cells[(r["node"], r["gpu"])]["temp_inc"] = round(r["m"])
+        cells.setdefault((r["node"], r["gpu"]), {})["temp_inc"] = round(r["m"])
     series = []
     for r in store.db.execute(
             """SELECT ts, MAX(CASE WHEN metric=? THEN value END) u, MAX(CASE WHEN metric=? THEN value END) tp,
                       MAX(CASE WHEN metric=? THEN value END) c, MAX(CASE WHEN metric=? THEN value END) p
                FROM gpu_metrics WHERE node=? AND gpu=? GROUP BY ts ORDER BY ts""",
             (UTIL, TEMP, SM_CLOCK, POWER, node, gpu)):
-        series.append({"t": r["ts"], "util": round(r["u"], 1), "temp": round(r["tp"], 1), "clock": round(r["c"])})
-    return {"kind": "fleet", "onset": onset, "duration": duration, "flagged": {"node": node, "gpu": gpu},
+        series.append({"t": r["ts"], "util": None if r["u"] is None else round(r["u"], 1),
+                       "temp": None if r["tp"] is None else round(r["tp"], 1), "clock": None if r["c"] is None else round(r["c"])})
+    return {"kind": "fleet", "simulated": simulated, "onset": onset, "duration": duration, "flagged": {"node": node, "gpu": gpu},
             "incident_window": list(incident),
             "cells": [{"node": n, "gpu": g, **v} for (n, g), v in sorted(cells.items())],
             "series": series[::2]}

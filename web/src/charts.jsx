@@ -96,6 +96,7 @@ export function LineChart({ title, unit, points, xFmt, refLine, markers = [], ba
 }
 
 export function FleetGrid({ chart }) {
+  const real = chart.simulated === false;
   const [hover, setHover] = useState(null);
   const byNode = {};
   chart.cells.forEach((c) => { (byNode[c.node] ||= []).push(c); });
@@ -103,7 +104,7 @@ export function FleetGrid({ chart }) {
   const f = chart.flagged;
   return (
     <figure className="chart fleet">
-      <figcaption>Mean GPU utilization during the incident window, 64 GPUs (simulated)</figcaption>
+      <figcaption>Mean GPU utilization during the incident window, {chart.cells.length} GPUs{real ? " on this machine (real data)" : " (simulated)"}</figcaption>
       <div className="grid8" role="img" aria-label="GPU utilization heatmap">
         {nodes.map((n) => (
           <div className="noderow" key={n}>
@@ -112,10 +113,10 @@ export function FleetGrid({ chart }) {
               const flagged = c.node === f.node && c.gpu === f.gpu;
               return (
                 <button key={c.gpu} className={"cell" + (flagged ? " flagged" : "")}
-                        style={{ background: rampColor(c.util_inc) }}
+                        style={{ background: c.util_inc == null ? "#33332f" : rampColor(c.util_inc) }}
                         onMouseEnter={() => setHover(c)} onMouseLeave={() => setHover(null)}
                         onFocus={() => setHover(c)} onBlur={() => setHover(null)}
-                        aria-label={`${c.node} GPU ${c.gpu}: ${c.util_inc}% utilization`}>
+                        aria-label={`${c.node} GPU ${c.gpu}: ${c.util_inc ?? "no"}% utilization`}>
                   {flagged ? <span className="flagmark">!</span> : null}
                 </button>
               );
@@ -128,13 +129,13 @@ export function FleetGrid({ chart }) {
         <span className="flaglegend"><span className="flagmark inline">!</span> flagged by the watcher</span>
       </div>
       <div className="hoverline">
-        {hover ? <>{hover.node} GPU {hover.gpu}: <b>{hover.util_inc}%</b> now, {hover.util_base}% at baseline, {hover.temp_inc} °C</>
+        {hover ? <>{hover.node} GPU {hover.gpu}: <b>{hover.util_inc ?? "no data"}{hover.util_inc != null && "%"}</b> now, {hover.util_base != null ? `${hover.util_base}%` : "no data"} at baseline, {hover.temp_inc ?? "no"} °C</>
                : "Hover a GPU for details. Darker cells ran at lower utilization; not every one is an incident (a GPU can simply be idle)."}
       </div>
       <details className="tableview"><summary>Table view</summary>
         <table><thead><tr><th>GPU</th><th>Util now</th><th>Util baseline</th><th>Temp °C</th></tr></thead>
           <tbody>{chart.cells.filter((c) => c.util_inc < 60 || (c.node === f.node && c.gpu === f.gpu)).map((c) => (
-            <tr key={c.node + c.gpu}><td>{c.node} / {c.gpu}</td><td>{c.util_inc}%</td><td>{c.util_base}%</td><td>{c.temp_inc}</td></tr>))}</tbody></table>
+            <tr key={c.node + c.gpu}><td>{c.node} / {c.gpu}</td><td>{c.util_inc ?? "n/a"}</td><td>{c.util_base ?? "n/a"}</td><td>{c.temp_inc ?? "n/a"}</td></tr>))}</tbody></table>
         <p className="note">Showing GPUs below 60% utilization and the flagged one. The grid has all 64.</p>
       </details>
     </figure>

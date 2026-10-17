@@ -47,7 +47,8 @@ I do not have a GPU, so I was careful about this.
 
 - Token Factory telemetry: real.
 - The retry-storm 429s and the provider-slowdown delay: injected on the client, and labeled `live_injected`. Retry and backoff behavior on top of them is real.
-- All GPU telemetry: **simulated**. The metric names follow NVIDIA DCGM exporter, but the series are generated, each fault has a signature I wrote, and the dashboard marks every GPU view as simulated. Results on it show that the pipeline works. They do not show accuracy on a real cluster.
+- Two GPU incidents use **real telemetry** from a production cluster: the public AcmeTrace Kalos traces (CC-BY-4.0, see "Data and attribution"). The dashboard labels them as real data.
+- All other GPU telemetry is **simulated**. The metric names follow NVIDIA DCGM exporter, but the series are generated, each fault has a signature I wrote, and the dashboard marks every such view as simulated. Results on it show that the pipeline works. They do not show accuracy on a real cluster.
 
 ## Nemotron and Token Factory use
 
@@ -76,7 +77,9 @@ The big gain came from giving the model the right evidence: stratified compariso
 
 **Simulated GPU fleet** (64 GPUs, 179,200 samples, three different faults plus two decoys, 9 incidents): the agent got 9 of 9 and a one-shot aggregate dump got 8 of 9. The scenarios are my own simulation.
 
-**Stored dashboard investigations:** 7 of 8 matched the injected fault. The miss is the "misleading deploy event" case, where the agent diagnosed prompt expansion and the truth was client concurrency. Its own evidence called concurrency "a significant amplifier", so it contradicted its conclusion. I left it in the demo.
+**Real GPU data (2 incidents):** I searched the public AcmeTrace Kalos traces for the first time a GPU reported Xid 94 (a contained memory error), and found two. In one, utilization fell from 96% to 25% and all 8 GPUs on the node stalled together. In the other, nothing in utilization, temperature or power changed at all. The agent answered "GPU hardware fault, medium confidence" for both, and said plainly where the data was missing. There is no human-verified diagnosis for these events. The only label is the Xid code, which the agent also saw, so this is a demonstration that the pipeline copes with real, gappy data, not a measure of accuracy. A one-shot baseline given the same tables gave the same answer in 6 of 6 runs at a fraction of the cost, so the agent has no accuracy edge here either. My first attempt on these failed for reasons in my own pipeline (a step budget that ran out, and a prompt that wrongly said a utilization monitor had fired), so I fixed those and re-ran. Both attempts are in the repo.
+
+**Stored dashboard investigations (simulated GPU and Token Factory):** 7 of 8 matched the injected fault. The miss is the "misleading deploy event" case, where the agent diagnosed prompt expansion and the truth was client concurrency. Its own evidence called concurrency "a significant amplifier", so it contradicted its conclusion. I left it in the demo.
 
 ## Challenges
 
@@ -97,11 +100,22 @@ The big gain came from giving the model the right evidence: stratified compariso
 
 ClusterDoctor is a new repository, and all its code was written during the submission period. Its first commit is dated 2026-10-17. It grew out of an earlier project of mine, Grid Co-Pilot, which does evidence-first root-cause analysis on electrical grid telemetry. ClusterDoctor reuses that idea and shares no code with it.
 
+**Can telemetry alone see a driver error? No.** I scanned the full Kalos Xid and utilization files (1.6 GB, streamed) for real labels. The dataset holds only 50 true Xid changes in 15.5 days, while 48,811 utilization collapses pass the same filter, so a collapse that coincides with a driver error is about 4 in 48,811. With the Xid hidden, neither a one-shot baseline nor the agent ever said "driver error" on 20 real windows, and both missed all 4 real driver errors. They defaulted to the base rate, which is right but cannot detect anything. This is why ClusterDoctor has an Xid watcher. With only 4 positives it says nothing about model accuracy.
+
+**Follow-up tests, designed in advance (`docs/preregistered-tests.md`): the agent did not win any.** On a 2,048-GPU simulated fleet with a one-shot dump of about 2,400 tokens, the agent got 5 of 20 and the one-shot 15 of 20. Many agent abstentions were its own format failures that my evidence check converted, one of the four families was badly designed by me (five slot issues at once, so the signal was diluted and both scored 0 of 5), and results varied from run to run. Across three difficulty levels on the 64-GPU fleet the watchers detected every fault at easy level, two thirds at medium and a third at hard, while diagnosis stayed easy once a fault was caught. On 31 real windows where nothing was wrong (no Xid, normal temperature), the one-shot named a fault in 8 and the agent in 9, always a data-loader bottleneck, with an unverified "no fault" label. Total spend $2.94.
+
+## Data and attribution
+
+- **AcmeTrace** (Kalos cluster utilization traces), Shanghai AI Laboratory, CC-BY-4.0, https://huggingface.co/datasets/Qinghao/AcmeTrace. Paper: Qinghao Hu et al., *Characterization of Large Language Model Development in the Datacenter*, NSDI '24, arXiv:2403.07648. I used a subset (two 3-hour windows, 8 GPUs each, utilization, temperature, power and the Xid code) converted to JSON. Raw files are not in the repo. Details in `data/real/README.md`.
+- **Azure LLM inference traces** (2023, CC-BY, Patel et al., *Splitwise*, ISCA 2024): profiled only, not used to drive the benchmarks. They show real median prompts of 1,000 to 1,500 tokens, much larger than my synthetic 213-token baseline, so my absolute latencies are not production-like.
+- **NVIDIA Xid catalog** (https://docs.nvidia.com/deploy/xid-errors/analyzing-xid-catalog.html): the meanings of Xid 31, 43, 45 and 94 in the agent's lookup tool.
+- Not used: the OLCF Summit GPU fault dataset, because its page reserves all rights.
+
 ## What's next
 
-- Test on telemetry from a real GPU cluster scraped from dcgm-exporter through Prometheus.
+- More real incidents with independent labels. Public traces give Xid codes but no verified root causes, so I could only demonstrate, not score.
 - Write incident cases independently of the tool design, to check whether the stratified method generalizes.
-- Add fleet-scale queries where the data is too large to put in one prompt, which is where an agent has to fetch what it needs.
+- Test other models, or a prompt that forces slicing first, on the scale test. A clean slot family and format retries did not rescue this model.
 - Hooks for a person to approve a recommended action.
 
 ## Feedback for Nebius and NVIDIA
@@ -115,6 +129,8 @@ ClusterDoctor is a new repository, and all its code was written during the submi
 5. **Prompt size and latency.** On Lightning, latency barely moved from 200 to 3,700 input tokens and roughly doubled around 28,000. A short guide to how latency scales with context on each model would help people plan.
 
 ### NVIDIA models
+
+- **Structured output compliance was the weakest point.** In the scale test, 11 of 14 Nemotron 3 Ultra answers needed a format retry: free text in an enum field, missing required fields, numeric confidence where high, medium or low was specified. Token Factory enforcing the tool schema, or guided decoding, would remove that failure mode.
 
 - Nemotron 3 Ultra followed the tool-calling protocol reliably over the OpenAI-compatible API, including a custom `submit_diagnosis` tool with a strict schema. It followed a two-hypothesis testing protocol when told to.
 - Failure modes I measured: it anchors on the most visible change in confounded cases, and 4 to 7% of its first-pass claims misstated or went beyond the tool data. A second verification call fixed most of those.

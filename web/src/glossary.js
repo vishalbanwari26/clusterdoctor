@@ -9,7 +9,7 @@ export const CAUSES = {
   insufficient_evidence: { label: "Not enough evidence", plain: "The data cannot tell the possible causes apart, so the agent declined to guess." },
   thermal_throttling: { label: "GPU overheating, slowing itself down", plain: "The GPU got too hot and lowered its own clock speed to protect itself, so it does less work." },
   data_loader_bottleneck: { label: "GPU waiting for data", plain: "The input pipeline cannot feed data fast enough, so the GPU sits idle between batches. The host CPU is usually maxed out." },
-  gpu_hardware_fault: { label: "GPU hardware error", plain: "The GPU reported an error code (an Xid) and stopped doing useful work." },
+  gpu_hardware_fault: { label: "GPU hardware error", plain: "The GPU driver reported a hardware-related error code (an Xid). Depending on the code, the affected program may have to restart, and the GPU may or may not show a performance symptom." },
 };
 export const causeLabel = (c) => CAUSES[c]?.label ?? pretty(c);
 export const causePlain = (c) => CAUSES[c]?.plain ?? "";

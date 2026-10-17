@@ -1,0 +1,445 @@
+{
+ "design_sha256": "f17b779ea78942db",
+ "rows": [
+  {
+   "id": "e04",
+   "gpu": "172.31.28.228-3",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium",
+    "tool_calls": 3
+   },
+   "cost": 0.013025
+  },
+  {
+   "id": "n00",
+   "gpu": "172.31.0.155-1",
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.013394
+  },
+  {
+   "id": "n01",
+   "gpu": "172.31.12.167-6",
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium"
+   },
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium",
+    "tool_calls": 4
+   },
+   "cost": 0.017168
+  },
+  {
+   "id": "e06",
+   "gpu": "172.31.0.241-5",
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium"
+   },
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "medium",
+    "tool_calls": 4
+   },
+   "cost": 0.022417
+  },
+  {
+   "id": "n02",
+   "gpu": "172.31.28.227-0",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.010406
+  },
+  {
+   "id": "e07",
+   "gpu": "172.31.0.116-7",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium",
+    "tool_calls": 4
+   },
+   "cost": 0.015913999999999998
+  },
+  {
+   "id": "n03",
+   "gpu": "172.31.13.141-7",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.01227
+  },
+  {
+   "id": "e08",
+   "gpu": "172.31.12.18-2",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "cost": 0.009517999999999999
+  },
+  {
+   "id": "n04",
+   "gpu": "172.31.5.120-7",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "cost": 0.009368000000000001
+  },
+  {
+   "id": "e09",
+   "gpu": "172.31.12.179-2",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "cost": 0.009415
+  },
+  {
+   "id": "n05",
+   "gpu": "172.31.14.91-0",
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium"
+   },
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "cost": 0.009727
+  },
+  {
+   "id": "e10",
+   "gpu": "172.31.0.3-6",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.008306000000000001
+  },
+  {
+   "id": "n06",
+   "gpu": "172.31.5.48-3",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.011248000000000001
+  },
+  {
+   "id": "e11",
+   "gpu": "172.31.15.220-1",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.011352
+  },
+  {
+   "id": "n07",
+   "gpu": "172.31.12.167-5",
+   "baseline": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "medium"
+   },
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "medium",
+    "tool_calls": 3
+   },
+   "cost": 0.015769000000000002
+  },
+  {
+   "id": "e12",
+   "gpu": "172.31.15.112-0",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "cost": 0.012065
+  },
+  {
+   "id": "n08",
+   "gpu": "172.31.0.211-2",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "cost": 0.016026
+  },
+  {
+   "id": "e13",
+   "gpu": "172.31.5.120-1",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.009763
+  },
+  {
+   "id": "n09",
+   "gpu": "172.31.29.129-0",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.012146
+  },
+  {
+   "id": "e14",
+   "gpu": "172.31.0.233-2",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.010637
+  },
+  {
+   "id": "n10",
+   "gpu": "172.31.13.141-3",
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium"
+   },
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.013239999999999998
+  },
+  {
+   "id": "e15",
+   "gpu": "172.31.5.206-0",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "medium",
+    "tool_calls": 4
+   },
+   "cost": 0.012877999999999999
+  },
+  {
+   "id": "n11",
+   "gpu": "172.31.15.112-7",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.009816
+  },
+  {
+   "id": "e16",
+   "gpu": "172.31.5.247-6",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.010107
+  },
+  {
+   "id": "n12",
+   "gpu": "172.31.12.203-7",
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium"
+   },
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "cost": 0.019116
+  },
+  {
+   "id": "e17",
+   "gpu": "172.31.14.29-4",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "cost": 0.009541999999999998
+  },
+  {
+   "id": "n13",
+   "gpu": "172.31.15.68-4",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "cost": 0.012584999999999999
+  },
+  {
+   "id": "e18",
+   "gpu": "172.31.5.53-5",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "cost": 0.015116
+  },
+  {
+   "id": "n14",
+   "gpu": "172.31.15.174-2",
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium"
+   },
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "cost": 0.020481000000000003
+  },
+  {
+   "id": "e19",
+   "gpu": "172.31.0.246-7",
+   "baseline": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "no_fault_job_ended",
+    "confidence": "high",
+    "tool_calls": 3
+   },
+   "cost": 0.012737
+  },
+  {
+   "id": "n15",
+   "gpu": "172.31.15.0-5",
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high"
+   },
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "cost": 0.015014
+  }
+ ],
+ "excluded": [
+  {
+   "id": "e05",
+   "reason": "temperature not normal (baseline None, incident None)"
+  }
+ ]
+}

@@ -55,25 +55,26 @@ CREATE INDEX IF NOT EXISTS idx_gpu_key ON gpu_metrics(node, gpu, metric, ts);
 """
 
 
-def sample(scenario: str, t: float, onset: float, rng: random.Random) -> dict[str, float]:
+def sample(scenario: str, t: float, onset: float, rng: random.Random,
+           strength: float = 1.0, noise: float = 1.0) -> dict[str, float]:
     """One scrape of one GPU. `onset` is when the fault begins (seconds)."""
-    n = lambda sd: rng.gauss(0, sd)  # noqa: E731
+    n = lambda sd: rng.gauss(0, sd * noise)  # noqa: E731
     faulty = t >= onset
     ramp = min(1.0, (t - onset) / 120) if faulty else 0.0   # fault develops over 2 minutes
 
     util, temp, clock, cpu, throttle = 96 + n(2), 68 + n(1.5), 1980 + n(15), 45 + n(5), 0.0
     if scenario == "thermal_throttle" and faulty:
-        temp = 68 + 20 * ramp + n(1.5)
+        temp = 68 + 20 * strength * ramp + n(1.5)
         throttle = THERMAL_SLOWDOWN if temp > 80 else 0.0
-        clock = 1980 - 700 * ramp + n(15)
-        util = 96 - 50 * ramp + n(3)
+        clock = 1980 - 700 * strength * ramp + n(15)
+        util = 96 - 50 * strength * ramp + n(3)
     elif scenario == "dataloader_bottleneck" and faulty:
-        util = rng.choice([15, 20, 30, 90]) + n(4) if ramp > 0.1 else util
-        cpu = 97 + n(1.5)
-        temp = 68 - 8 * ramp + n(1.5)
+        util = 96 - strength * (96 - rng.choice([15, 20, 30, 90])) + n(4) if ramp > 0.1 else util
+        cpu = 45 + strength * 52 + n(1.5)
+        temp = 68 - 8 * strength * ramp + n(1.5)
     xid = 0.0
     if scenario == "gpu_hardware_fault" and faulty:
-        util, xid = max(0.0, 2 + n(1.5)), 48.0
+        util, xid = max(0.0, 96 - strength * 94 + n(1.5)), 48.0
     elif scenario == "transient_dip" and faulty and t - onset < 45:
         util = 20 + n(3)
     elif scenario == "idle":
@@ -114,7 +115,8 @@ def prometheus_text(store: Store, at: float) -> str:
 
 
 def generate_fleet(store: Store, faults: dict[tuple[str, int], str], nodes: int = 8, gpus: int = 8,
-                   duration: float = 12000, onset: float = 7200, step: float = 30.0, seed: int = 0) -> None:
+                   duration: float = 12000, onset: float = 7200, step: float = 30.0, seed: int = 0,
+                   strength: float = 1.0, noise: float = 1.0, missing: float = 0.0) -> None:
     """A large simulated fleet. `faults` maps (node, gpu) -> scenario; every other GPU is healthy.
     Host CPU is a node-level metric, stored on each of the node's GPU rows."""
     rng = random.Random(seed)
@@ -123,12 +125,13 @@ def generate_fleet(store: Store, faults: dict[tuple[str, int], str], nodes: int 
     rows, t = [], 0.0
     while t < duration:
         for node in names:
-            samples = {g: sample(faults.get((node, g), "healthy"), t, onset, rng) for g in range(gpus)}
+            samples = {g: sample(faults.get((node, g), "healthy"), t, onset, rng, strength, noise) for g in range(gpus)}
             loader = [g for g in range(gpus) if faults.get((node, g)) == "dataloader_bottleneck"]
             cpu = samples[loader[0]][CPU_UTIL] if loader else max(0.0, rng.gauss(45, 5))
             for g, m in samples.items():
                 m[CPU_UTIL] = cpu
-                rows += [(t, node, g, k, v, "simulated") for k, v in m.items()]
+                rows += [(t, node, g, k, v, "simulated") for k, v in m.items()
+                         if k == XID or not missing or rng.random() >= missing]
         t += step
     with store.lock:
         store.db.executemany("INSERT INTO gpu_metrics VALUES (?,?,?,?,?,?)", rows)

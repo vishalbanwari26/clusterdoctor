@@ -1,0 +1,325 @@
+{
+ "design_sha256": "4db6e820e0c38ec5",
+ "rows": [
+  {
+   "id": "c00",
+   "family": "A",
+   "truth": "gpu_thermal_isolated",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 8
+   },
+   "baseline": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "high",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.076222
+  },
+  {
+   "id": "c05",
+   "family": "B",
+   "truth": "rack_cooling_failure",
+   "agent": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "high",
+    "tool_calls": 11
+   },
+   "baseline": {
+    "root_cause": "rack_cooling_failure",
+    "confidence": "high",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.085154
+  },
+  {
+   "id": "c10",
+   "family": "C",
+   "truth": "slot_position_issue",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 7
+   },
+   "baseline": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "high",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.05004600000000001
+  },
+  {
+   "id": "c15",
+   "family": "D",
+   "truth": "node_wide_stall",
+   "agent": {
+    "root_cause": "node_wide_stall",
+    "confidence": "high",
+    "tool_calls": 5
+   },
+   "baseline": {
+    "root_cause": "node_wide_stall",
+    "confidence": "high",
+    "dump_tokens_est": 2344
+   },
+   "cost": 0.027036
+  },
+  {
+   "id": "c01",
+   "family": "A",
+   "truth": "gpu_thermal_isolated",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 18
+   },
+   "baseline": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "high",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.090806
+  },
+  {
+   "id": "c06",
+   "family": "B",
+   "truth": "rack_cooling_failure",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 14
+   },
+   "baseline": {
+    "root_cause": "rack_cooling_failure",
+    "confidence": "medium",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.087407
+  },
+  {
+   "id": "c11",
+   "family": "C",
+   "truth": "slot_position_issue",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 14
+   },
+   "baseline": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "medium",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.076561
+  },
+  {
+   "id": "c16",
+   "family": "D",
+   "truth": "node_wide_stall",
+   "agent": {
+    "root_cause": "node_wide_stall",
+    "confidence": "high",
+    "tool_calls": 15
+   },
+   "baseline": {
+    "root_cause": "node_wide_stall",
+    "confidence": "high",
+    "dump_tokens_est": 2342
+   },
+   "cost": 0.080088
+  },
+  {
+   "id": "c02",
+   "family": "A",
+   "truth": "gpu_thermal_isolated",
+   "agent": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "high",
+    "tool_calls": 5
+   },
+   "baseline": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "high",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.03073
+  },
+  {
+   "id": "c07",
+   "family": "B",
+   "truth": "rack_cooling_failure",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 13
+   },
+   "baseline": {
+    "root_cause": "rack_cooling_failure",
+    "confidence": "high",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.11311099999999999
+  },
+  {
+   "id": "c12",
+   "family": "C",
+   "truth": "slot_position_issue",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 15
+   },
+   "baseline": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "high",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.135999
+  },
+  {
+   "id": "c17",
+   "family": "D",
+   "truth": "node_wide_stall",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 6
+   },
+   "baseline": {
+    "root_cause": "node_wide_stall",
+    "confidence": "high",
+    "dump_tokens_est": 2342
+   },
+   "cost": 0.08209999999999999
+  },
+  {
+   "id": "c03",
+   "family": "A",
+   "truth": "gpu_thermal_isolated",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 14
+   },
+   "baseline": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "high",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.08576899999999998
+  },
+  {
+   "id": "c08",
+   "family": "B",
+   "truth": "rack_cooling_failure",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 7
+   },
+   "baseline": {
+    "root_cause": "rack_cooling_failure",
+    "confidence": "high",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.066609
+  },
+  {
+   "id": "c13",
+   "family": "C",
+   "truth": "slot_position_issue",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 14
+   },
+   "baseline": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "medium",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.118346
+  },
+  {
+   "id": "c18",
+   "family": "D",
+   "truth": "node_wide_stall",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 14
+   },
+   "baseline": {
+    "root_cause": "node_wide_stall",
+    "confidence": "high",
+    "dump_tokens_est": 2342
+   },
+   "cost": 0.083595
+  },
+  {
+   "id": "c04",
+   "family": "A",
+   "truth": "gpu_thermal_isolated",
+   "agent": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "high",
+    "tool_calls": 7
+   },
+   "baseline": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "high",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.068749
+  },
+  {
+   "id": "c09",
+   "family": "B",
+   "truth": "rack_cooling_failure",
+   "agent": {
+    "root_cause": "insufficient_evidence",
+    "confidence": "low",
+    "tool_calls": 5
+   },
+   "baseline": {
+    "root_cause": "rack_cooling_failure",
+    "confidence": "high",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.04883699999999999
+  },
+  {
+   "id": "c14",
+   "family": "C",
+   "truth": "slot_position_issue",
+   "agent": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "high",
+    "tool_calls": 20
+   },
+   "baseline": {
+    "root_cause": "gpu_thermal_isolated",
+    "confidence": "high",
+    "dump_tokens_est": 2366
+   },
+   "cost": 0.097512
+  },
+  {
+   "id": "c19",
+   "family": "D",
+   "truth": "node_wide_stall",
+   "agent": {
+    "root_cause": "node_wide_stall",
+    "confidence": "high",
+    "tool_calls": 20
+   },
+   "baseline": {
+    "root_cause": "node_wide_stall",
+    "confidence": "high",
+    "dump_tokens_est": 2343
+   },
+   "cost": 0.101051
+  }
+ ]
+}

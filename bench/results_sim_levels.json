@@ -1,0 +1,521 @@
+{
+ "design_sha256": "4db6e820e0c38ec5",
+ "rows": [
+  {
+   "level": "easy",
+   "seed": 101,
+   "gpu": "node-02/5",
+   "truth": "thermal_throttling",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "thermal_throttling",
+    "confidence": "high",
+    "tool_calls": 5
+   },
+   "baseline": {
+    "root_cause": "thermal_throttling",
+    "confidence": "high"
+   },
+   "cost": 0.017973
+  },
+  {
+   "level": "easy",
+   "seed": 101,
+   "gpu": "node-05/1",
+   "truth": "data_loader_bottleneck",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 8
+   },
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium"
+   },
+   "cost": 0.031813999999999995
+  },
+  {
+   "level": "easy",
+   "seed": 101,
+   "gpu": "node-07/6",
+   "truth": "gpu_hardware_fault",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high",
+    "tool_calls": 8
+   },
+   "baseline": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high"
+   },
+   "cost": 0.022066999999999996
+  },
+  {
+   "level": "medium",
+   "seed": 101,
+   "gpu": "node-02/5",
+   "truth": "thermal_throttling",
+   "detected": false
+  },
+  {
+   "level": "medium",
+   "seed": 101,
+   "gpu": "node-05/1",
+   "truth": "data_loader_bottleneck",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 6
+   },
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium"
+   },
+   "cost": 0.022805
+  },
+  {
+   "level": "medium",
+   "seed": 101,
+   "gpu": "node-07/6",
+   "truth": "gpu_hardware_fault",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "medium",
+    "tool_calls": 7
+   },
+   "baseline": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high"
+   },
+   "cost": 0.029151000000000003
+  },
+  {
+   "level": "hard",
+   "seed": 101,
+   "gpu": "node-02/5",
+   "truth": "thermal_throttling",
+   "detected": false
+  },
+  {
+   "level": "hard",
+   "seed": 101,
+   "gpu": "node-05/1",
+   "truth": "data_loader_bottleneck",
+   "detected": false
+  },
+  {
+   "level": "hard",
+   "seed": 101,
+   "gpu": "node-07/6",
+   "truth": "gpu_hardware_fault",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high",
+    "tool_calls": 8
+   },
+   "baseline": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high"
+   },
+   "cost": 0.031035
+  },
+  {
+   "level": "easy",
+   "seed": 102,
+   "gpu": "node-02/5",
+   "truth": "thermal_throttling",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "thermal_throttling",
+    "confidence": "high",
+    "tool_calls": 6
+   },
+   "baseline": {
+    "root_cause": "thermal_throttling",
+    "confidence": "high"
+   },
+   "cost": 0.026694
+  },
+  {
+   "level": "easy",
+   "seed": 102,
+   "gpu": "node-05/1",
+   "truth": "data_loader_bottleneck",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium",
+    "tool_calls": 5
+   },
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium"
+   },
+   "cost": 0.025254
+  },
+  {
+   "level": "easy",
+   "seed": 102,
+   "gpu": "node-07/6",
+   "truth": "gpu_hardware_fault",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high",
+    "tool_calls": 8
+   },
+   "baseline": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high"
+   },
+   "cost": 0.024929
+  },
+  {
+   "level": "medium",
+   "seed": 102,
+   "gpu": "node-02/5",
+   "truth": "thermal_throttling",
+   "detected": false
+  },
+  {
+   "level": "medium",
+   "seed": 102,
+   "gpu": "node-05/1",
+   "truth": "data_loader_bottleneck",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 7
+   },
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium"
+   },
+   "cost": 0.02198
+  },
+  {
+   "level": "medium",
+   "seed": 102,
+   "gpu": "node-07/6",
+   "truth": "gpu_hardware_fault",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 8
+   },
+   "baseline": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high"
+   },
+   "cost": 0.022843000000000002
+  },
+  {
+   "level": "hard",
+   "seed": 102,
+   "gpu": "node-02/5",
+   "truth": "thermal_throttling",
+   "detected": false
+  },
+  {
+   "level": "hard",
+   "seed": 102,
+   "gpu": "node-05/1",
+   "truth": "data_loader_bottleneck",
+   "detected": false
+  },
+  {
+   "level": "hard",
+   "seed": 102,
+   "gpu": "node-07/6",
+   "truth": "gpu_hardware_fault",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high",
+    "tool_calls": 7
+   },
+   "baseline": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high"
+   },
+   "cost": 0.022252
+  },
+  {
+   "level": "easy",
+   "seed": 103,
+   "gpu": "node-02/5",
+   "truth": "thermal_throttling",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "thermal_throttling",
+    "confidence": "high",
+    "tool_calls": 6
+   },
+   "baseline": {
+    "root_cause": "thermal_throttling",
+    "confidence": "high"
+   },
+   "cost": 0.02044
+  },
+  {
+   "level": "easy",
+   "seed": 103,
+   "gpu": "node-05/1",
+   "truth": "data_loader_bottleneck",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 6
+   },
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium"
+   },
+   "cost": 0.029546
+  },
+  {
+   "level": "easy",
+   "seed": 103,
+   "gpu": "node-07/6",
+   "truth": "gpu_hardware_fault",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high",
+    "tool_calls": 8
+   },
+   "baseline": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high"
+   },
+   "cost": 0.02101
+  },
+  {
+   "level": "medium",
+   "seed": 103,
+   "gpu": "node-02/5",
+   "truth": "thermal_throttling",
+   "detected": false
+  },
+  {
+   "level": "medium",
+   "seed": 103,
+   "gpu": "node-05/1",
+   "truth": "data_loader_bottleneck",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 5
+   },
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "medium"
+   },
+   "cost": 0.022059999999999996
+  },
+  {
+   "level": "medium",
+   "seed": 103,
+   "gpu": "node-07/6",
+   "truth": "gpu_hardware_fault",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high",
+    "tool_calls": 7
+   },
+   "baseline": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high"
+   },
+   "cost": 0.023712999999999998
+  },
+  {
+   "level": "hard",
+   "seed": 103,
+   "gpu": "node-02/5",
+   "truth": "thermal_throttling",
+   "detected": false
+  },
+  {
+   "level": "hard",
+   "seed": 103,
+   "gpu": "node-05/1",
+   "truth": "data_loader_bottleneck",
+   "detected": false
+  },
+  {
+   "level": "hard",
+   "seed": 103,
+   "gpu": "node-07/6",
+   "truth": "gpu_hardware_fault",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high",
+    "tool_calls": 8
+   },
+   "baseline": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high"
+   },
+   "cost": 0.022216
+  },
+  {
+   "level": "easy",
+   "seed": 104,
+   "gpu": "node-02/5",
+   "truth": "thermal_throttling",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "thermal_throttling",
+    "confidence": "high",
+    "tool_calls": 4
+   },
+   "baseline": {
+    "root_cause": "thermal_throttling",
+    "confidence": "high"
+   },
+   "cost": 0.020338000000000002
+  },
+  {
+   "level": "easy",
+   "seed": 104,
+   "gpu": "node-05/1",
+   "truth": "data_loader_bottleneck",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 8
+   },
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high"
+   },
+   "cost": 0.030999
+  },
+  {
+   "level": "easy",
+   "seed": 104,
+   "gpu": "node-07/6",
+   "truth": "gpu_hardware_fault",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high",
+    "tool_calls": 5
+   },
+   "baseline": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high"
+   },
+   "cost": 0.022135000000000002
+  },
+  {
+   "level": "medium",
+   "seed": 104,
+   "gpu": "node-02/5",
+   "truth": "thermal_throttling",
+   "detected": false
+  },
+  {
+   "level": "medium",
+   "seed": 104,
+   "gpu": "node-05/1",
+   "truth": "data_loader_bottleneck",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high",
+    "tool_calls": 7
+   },
+   "baseline": {
+    "root_cause": "data_loader_bottleneck",
+    "confidence": "high"
+   },
+   "cost": 0.020962
+  },
+  {
+   "level": "medium",
+   "seed": 104,
+   "gpu": "node-07/6",
+   "truth": "gpu_hardware_fault",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high",
+    "tool_calls": 8
+   },
+   "baseline": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high"
+   },
+   "cost": 0.030532999999999998
+  },
+  {
+   "level": "hard",
+   "seed": 104,
+   "gpu": "node-02/5",
+   "truth": "thermal_throttling",
+   "detected": false
+  },
+  {
+   "level": "hard",
+   "seed": 104,
+   "gpu": "node-05/1",
+   "truth": "data_loader_bottleneck",
+   "detected": false
+  },
+  {
+   "level": "hard",
+   "seed": 104,
+   "gpu": "node-07/6",
+   "truth": "gpu_hardware_fault",
+   "detected": true,
+   "false_alerts_in_fleet": 0,
+   "agent": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high",
+    "tool_calls": 8
+   },
+   "baseline": {
+    "root_cause": "gpu_hardware_fault",
+    "confidence": "high"
+   },
+   "cost": 0.026157
+  }
+ ]
+}

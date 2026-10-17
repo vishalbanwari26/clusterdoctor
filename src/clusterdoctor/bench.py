@@ -76,3 +76,32 @@ def baseline_diagnose_rich(chat: Chat, tools: Tools, incident_summary: str) -> d
             "latency_s": time.time() - t,
             "prompt_tokens": reply.get("prompt_tokens") or 0,
             "completion_tokens": reply.get("completion_tokens") or 0}
+
+
+def baseline_diagnose_real(chat: Chat, tools, incident_summary: str) -> dict:
+    """One call, no tools, given everything the real-data agent could have queried (the fair baseline)."""
+    from .gpu_tools import GPU_ROOT_CAUSES
+    win = ("baseline", "incident")
+    dump = {
+        "windows": tools.compare_windows(),
+        "throttle_and_xid": {w: tools.throttle_reasons(w) for w in win},
+        "utilization_pattern": {w: tools.util_pattern(w) for w in win},
+        "host_cpu": {w: tools.host_cpu(w) for w in win},
+        "peer_gpus_same_node_during_incident": tools.peer_gpus(),
+    }
+    codes = {c for w in win for c in dump["throttle_and_xid"][w].get("xid_errors_seen", [])}
+    dump["xid_catalog"] = {int(c): tools.xid_lookup(int(c)) for c in codes}
+    system = (f"You diagnose one flagged GPU from a one-shot telemetry dump of REAL production data (15 s samples). Reply with ONLY JSON: "
+              f'{{"root_cause": one of {GPU_ROOT_CAUSES}, "confidence": "high"|"medium"|"low", "reasoning": "<short>"}}. '
+              "The data has utilization, temperature, power and the driver's Xid code only: no clock, throttle-reason or host-CPU data, "
+              "and a null means the value is missing. The incident was opened by low utilization or by an Xid change. "
+              "Use insufficient_evidence if the dump cannot decide.")
+    t = time.time()
+    reply = chat([{"role": "system", "content": system},
+                  {"role": "user", "content": f"Incident: {incident_summary}\n\n{json.dumps(dump, default=str)}"}], [])
+    parsed = _parse_json(reply.get("content") or "")
+    ok = parsed is not None and parsed.get("root_cause") in GPU_ROOT_CAUSES
+    return {"root_cause": parsed["root_cause"] if ok else "unparseable",
+            "confidence": parsed.get("confidence", "low") if ok else "low",
+            "reasoning": (parsed or {}).get("reasoning", "")[:400], "latency_s": time.time() - t,
+            "prompt_tokens": reply.get("prompt_tokens") or 0, "completion_tokens": reply.get("completion_tokens") or 0}

@@ -7,3 +7,4 @@ nohup.out
 .pytest_cache/
 web/node_modules/
 web/dist/
+data/raw/

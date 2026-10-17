@@ -30,14 +30,28 @@ function PlainSummary({ d }) {
       </p>
     );
   }
-  const f = c.flagged;
+  const f = c.flagged, real = c.simulated === false;
   const me = c.cells.find((x) => x.node === f.node && x.gpu === f.gpu);
-  const peers = c.cells.filter((x) => x.node === f.node && x.gpu !== f.gpu);
-  const peerAvg = Math.round(peers.reduce((s, x) => s + x.util_inc, 0) / peers.length);
+  const peers = c.cells.filter((x) => x.node === f.node && x.gpu !== f.gpu && x.util_inc != null);
+  const peerNow = peers.length ? Math.round(peers.reduce((s, x) => s + x.util_inc, 0) / peers.length) : null;
+  const peerBase = peers.filter((x) => x.util_base != null);
+  const peerBefore = peerBase.length ? Math.round(peerBase.reduce((s, x) => s + x.util_base, 0) / peerBase.length) : null;
+  const tail = real ? "This is real telemetry, not a simulation." : "This data is simulated.";
+  if (me.util_base == null) {
+    return (
+      <p className="plain">
+        <b>In plain words:</b> {f.node} GPU {f.gpu} reported a driver error, but it has no <Term k="utilization">utilization</Term> data
+        from before the event, so there is nothing to compare against. During the incident window it ran at {me.util_inc}%
+        {peerNow != null && <>, about the same as the other GPUs on the machine ({peerNow}%)</>}. {tail}
+      </p>
+    );
+  }
+  const peersMoved = peerNow != null && peerBefore != null && peerNow < peerBefore * 0.8;
   return (
     <p className="plain">
       <b>In plain words:</b> {f.node} GPU {f.gpu} dropped from {me.util_base}% to {me.util_inc}% <Term k="utilization">utilization</Term>,
-      while the other GPUs on the same machine stayed around {peerAvg}%. This data is simulated.
+      {peersMoved ? <> and the other GPUs on the same machine dropped too ({peerBefore}% to {peerNow}%), which looks like the whole workload stalling together.</>
+                  : <> while the other GPUs on the same machine stayed around {peerNow}%.</>} {tail}
     </p>
   );
 }
@@ -81,10 +95,10 @@ function Evidence({ d }) {
     <div className="two">
       <LineChart title={`${f.node} GPU ${f.gpu}: how busy it is over time (%)`} unit="%" yMax={100}
         points={c.series.map((s) => ({ x: rel(s.t), y: s.util }))} xFmt={mins} band={inc}
-        markers={[{ x: rel(c.onset), label: "problem starts" }]} />
+        markers={[{ x: rel(c.onset), label: c.simulated === false ? "Xid 94 reported" : "problem starts" }]} />
       <LineChart title={`${f.node} GPU ${f.gpu}: temperature (°C)`} unit="°C" yMax={100}
         points={c.series.map((s) => ({ x: rel(s.t), y: s.temp }))} xFmt={mins} band={inc}
-        markers={[{ x: rel(c.onset), label: "problem starts" }]} />
+        markers={[{ x: rel(c.onset), label: c.simulated === false ? "Xid 94 reported" : "problem starts" }]} />
     </div>
     <p className="note">The shaded band is the window the watcher flagged.</p>
   </>);
@@ -164,9 +178,7 @@ export default function App() {
           <h2>Incidents</h2>
           {list.map((i, idx) => (
             <React.Fragment key={i.id}>
-              {(idx === 0 || list[idx - 1].domain !== i.domain) && (
-                <h3 className="grouphead">{i.domain === "gpu" ? "Simulated GPU fleet" : "Real traffic to Token Factory"}</h3>
-              )}
+              {(idx === 0 || list[idx - 1].group !== i.group) && <h3 className="grouphead">{i.group}</h3>}
               <button className={"feeditem" + (i.id === sel ? " sel" : "")} onClick={() => setSel(i.id)} aria-current={i.id === sel}>
                 <span className="ititle">{i.title}</span>
                 <span className="isum">{i.summary.replace("p95_latency", "p95 latency")}</span>
@@ -184,7 +196,13 @@ export default function App() {
             <div className="dhead">
               <h2>{detail.title}</h2>
               <PlainSummary d={detail} />
-              <p className={"source" + (detail.domain === "gpu" ? " warn" : "")}>{detail.domain === "gpu" ? "⚠ " : ""}{detail.source}</p>
+              <p className={"source" + (detail.chart.simulated !== false && detail.domain === "gpu" ? " warn" : detail.attribution ? " real" : "")}>
+                {detail.chart.simulated !== false && detail.domain === "gpu" ? "⚠ " : ""}{detail.source}
+              </p>
+              {detail.attribution && (
+                <p className="attrib">Data: <a href={detail.attribution.url} target="_blank" rel="noreferrer">{detail.attribution.dataset}</a>, {detail.attribution.license}.
+                  Paper: {detail.attribution.paper}. Changes: {detail.attribution.changes}</p>
+              )}
             </div>
 
             {finished && <Verdict inv={inv} truth={truth} />}

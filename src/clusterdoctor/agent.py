@@ -88,6 +88,10 @@ class Investigation:
     revisions: int = 0
     verifier_tokens: int = 0
     protocol_retries: int = 0
+    schema_retries: int = 0
+    label_retries: int = 0
+    citation_retries: int = 0
+    original_root_cause: str | None = None   # what the model said before the evidence check downgraded it
     tests_valid: int = 0
 
 
@@ -145,6 +149,37 @@ def investigate(chat: Chat, tools, incident_summary: str, max_steps: int = 10,
                 continue
             args = json.loads(c["arguments"] or "{}")
             if c["name"] == "submit_diagnosis":
+                need = ["root_cause", "confidence", "evidence", "rejected_hypotheses", "uncertainties", "recommended_actions"]
+                missing = [k for k in need if k not in args]
+                if missing and inv.schema_retries < 2:          # the API does not enforce the schema, so we do
+                    inv.schema_retries += 1
+                    revise = True
+                    messages.append({"role": "tool", "tool_call_id": c["id"], "content":
+                                     f"submit_diagnosis is missing required fields: {', '.join(missing)}. Call it again with every field."})
+                    continue
+                for k, v in (("root_cause", "insufficient_evidence"), ("confidence", "low"), ("evidence", []),
+                             ("rejected_hypotheses", []), ("uncertainties", ["incomplete submission"]), ("recommended_actions", [])):
+                    args.setdefault(k, v)
+                args = _sanitize(args)
+                allowed = _allowed_labels(specs)
+                if allowed and args["root_cause"] not in allowed and inv.label_retries < 2:
+                    inv.label_retries += 1
+                    revise = True
+                    messages.append({"role": "tool", "tool_call_id": c["id"], "content":
+                                     f"root_cause must be exactly one of {allowed}. You wrote: {str(args['root_cause'])[:80]!r}. "
+                                     "Call submit_diagnosis again with one of those labels."})
+                    continue
+                if (args["root_cause"] != "insufficient_evidence" and seen_ids and inv.citation_retries < 1
+                        and not any(e.get("tool_call_id") in seen_ids for e in args["evidence"])):
+                    inv.citation_retries += 1
+                    revise = True
+                    messages.append({"role": "tool", "tool_call_id": c["id"], "content":
+                                     "Your evidence cites no tool result. Every evidence item needs a tool_call_id that is one of "
+                                     f"{sorted(seen_ids, key=lambda x: int(x.split('_')[1]))}. Call submit_diagnosis again with citations."})
+                    continue
+                if allowed and args["root_cause"] not in allowed:       # retries used up: fall back instead of accepting free text
+                    args["uncertainties"] = args["uncertainties"] + [f"root_cause {str(args['root_cause'])[:60]!r} was not an allowed label"]
+                    args["root_cause"] = "insufficient_evidence"
                 diag = _validate(args, seen_ids, inv)
                 strat_ids = {t["id"] for t in inv.trace if t["tool"] == test_tool}
                 inv.tests_valid = sum(t.get("tool_call_id") in strat_ids for t in diag.get("hypothesis_tests", []))
@@ -184,7 +219,10 @@ def investigate(chat: Chat, tools, incident_summary: str, max_steps: int = 10,
                                  ". Re-read the tool results, call more tools if needed, and submit a corrected diagnosis."})
                 continue
             fn = registry.get(c["name"])
-            result = fn(**args) if fn else {"error": f"unknown tool {c['name']}"}
+            try:
+                result = fn(**args) if fn else {"error": f"unknown tool {c['name']}"}
+            except (KeyError, TypeError, ValueError) as e:       # a bad argument is the model's to fix, not a crash
+                result = {"error": f"{type(e).__name__}: {e}. Check the tool's parameters and try again."}
             seen_ids.add(c["id"])
             inv.trace.append({"id": c["id"], "tool": c["name"], "args": args, "result": result})
             messages.append({"role": "tool", "tool_call_id": c["id"],
@@ -196,12 +234,38 @@ def investigate(chat: Chat, tools, incident_summary: str, max_steps: int = 10,
     return inv
 
 
+def _allowed_labels(specs: list[dict]) -> list[str] | None:
+    for sp in specs:
+        if sp["function"]["name"] == "submit_diagnosis":
+            return sp["function"]["parameters"]["properties"].get("root_cause", {}).get("enum")
+    return None
+
+
+def _sanitize(args: dict) -> dict:
+    """Coerce malformed model output into the expected shapes instead of crashing on it."""
+    def objs(items, keys):
+        out = []
+        for it in items if isinstance(items, list) else []:
+            if isinstance(it, dict):
+                out.append(it)
+            else:                                   # a bare string
+                out.append({keys[0]: "", keys[1]: str(it)} if keys[0] != "claim" else {"claim": str(it), "tool_call_id": ""})
+        return out
+    args["evidence"] = objs(args.get("evidence"), ("claim", "tool_call_id"))
+    args["rejected_hypotheses"] = objs(args.get("rejected_hypotheses"), ("cause", "why_rejected"))
+    for k in ("uncertainties", "recommended_actions"):
+        v = args.get(k)
+        args[k] = [str(x) for x in v] if isinstance(v, list) else ([str(v)] if v else [])
+    return args
+
+
 def _validate(diag: dict, seen_ids: set[str], inv: Investigation) -> dict:
     kept, dropped = [], []
     for e in diag.get("evidence", []):
         (kept if e.get("tool_call_id") in seen_ids else dropped).append(e)
     inv.dropped_evidence = dropped
     diag["evidence"] = kept
+    inv.original_root_cause = diag["root_cause"]
     if diag["root_cause"] != "insufficient_evidence" and not kept:
         diag["uncertainties"] = diag.get("uncertainties", []) + [
             f"original diagnosis '{diag['root_cause']}' cited no valid tool evidence"]

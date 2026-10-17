@@ -64,3 +64,13 @@ def test_live_failure_does_not_leak_details(monkeypatch):
     rid = client.get("/api/incidents").json()[0]["id"]
     r = client.post(f"/api/incidents/{rid}/rerun", headers={"x-forwarded-for": "7.7.7.7"})
     assert r.status_code == 502 and "test-key-not-real" not in r.text and "RuntimeError" in r.text
+
+
+def test_real_incidents_are_listed_in_their_own_group_with_attribution():
+    rows = {r["id"]: r for r in client.get("/api/incidents").json()}
+    if "real-xid94-a" not in rows:
+        pytest.skip("real replays not built")
+    assert rows["real-xid94-a"]["group"] == "Real GPU data (AcmeTrace Kalos)"
+    d = client.get("/api/incidents/real-xid94-a").json()
+    assert d["chart"]["simulated"] is False and "CC-BY" in d["attribution"]["license"]
+    assert client.get("/api/incidents/real-xid94-a/truth").json()["real"] is True
